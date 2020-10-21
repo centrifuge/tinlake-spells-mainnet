@@ -31,8 +31,9 @@ contract TinlakeSpell {
     address constant public SENIOR_MEMBERLIST = 0x26129802A858F3C28553f793E1008b8338e6aEd2;
    
     // permissions to be set
-    address constant public SENIOR_MEMBERLIST_ADMIN1 = 0x97b2d32fe673af5bb322409afb6253dfd02c0567;
-    address contract public SENIOR_MEMBERLIST_ADMIN2 = 0x6f5B7AF64fbb449020A74713E77262792165f0B6;
+    address constant public SENIOR_MEMBERLIST_ADMIN1 = 0x97b2d32FE673af5bb322409afb6253DFD02C0567;
+                                                       
+    address constant public SENIOR_MEMBERLIST_ADMIN2 = 0x6f5B7AF64fbb449020A74713E77262792165f0B6;
 
     function cast() public {
         require(!done, "spell-already-cast");
