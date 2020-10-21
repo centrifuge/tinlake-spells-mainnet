@@ -39,5 +39,5 @@ run bash commands
 store deployed spells in archive using following format
 
 ```bash 
-"archive/<root>/spell-<contract-address>.sol"  
+"archive/<root>/000<spell-index>_<contract-address>.sol"  
 ```
