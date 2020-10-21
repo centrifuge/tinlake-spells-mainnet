@@ -4,7 +4,7 @@
 
 set env
 ```
-    ETH_RPC_URL=https://kovan.infura.io/v3/<INFURA_KEY>
+    ETH_RPC_URL=https://mainnet.infura.io/v3/<INFURA_KEY>
 ```   
 
 run tests
@@ -17,7 +17,7 @@ run tests
 set env
 
 ```
-    ETH_RPC_URL=ttps://kovan.infura.io/v3/<INFURA_KEY>
+    ETH_RPC_URL=https://mainnet.infura.io/v3/<INFURA_KEY>
     ETH_KEYSTORE
     ETH_PASSWORD
     ETH_FROM
