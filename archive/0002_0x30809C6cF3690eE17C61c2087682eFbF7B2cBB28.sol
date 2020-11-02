@@ -30,12 +30,12 @@ interface NAVFeedLike {
 }
 
 // This spell makes changes to the tinlake mainnet CF4 deployment:
-// modify discount rate in nav feed
-// adds new risk groups to nav feed
-// lsets min epoch length to 24hrs
-// revokes permissions from old admin address on assessor
-// revokes permissions from old admin address on coordinator
-// gives permissions to admin wrapper contract on assessor 
+// modify discount rate in nav feed to 10.35%
+// adds new risk groups to nav feed 12-23
+// sets min epoch length to 24hrs
+// revokes permissions from old admin address on assessor 0x71d9f8CFdcCEF71B59DD81AB387e523E2834F2b8
+// revokes permissions from old admin address on coordinator 0x97b2d32FE673af5bb322409afb6253DFD02C0567
+// gives permissions to admin wrapper contract on assessor 0x533Ea66C62fad098599dE145970a8d49D6B5f9C4
 contract TinlakeSpell {
 
     bool public done;
@@ -49,7 +49,6 @@ contract TinlakeSpell {
     address constant public ASSESSOR = 0x6aaf2EE5b2B62fb9E29E021a1bF3B381454d900a;
     address constant public COORDINATOR = 0xFc224d40Eb9c40c85c71efa773Ce24f8C95aAbAb;
     address constant public NAV_FEED = 0x69504da6B2Cd8320B9a62F3AeD410a298d3E7Ac6;
-    address constant public PILE = 0x3fC72dA5545E2AB6202D81fbEb1C8273Be95068C;
     
     // permissions to be set
     address constant public ASSESSOR_ADMIN_WRAPPER = 0x533Ea66C62fad098599dE145970a8d49D6B5f9C4;  
@@ -60,8 +59,8 @@ contract TinlakeSpell {
 
     // new minEpochTime
     uint constant public minEpochTime = 1 days;
-    // new discountRate
-    uint constant public discountRate = uint(1000000003599061390157280568); 
+    // new discountRate1     
+    uint constant public discountRate = uint(1000000003281963470319634703);
 
     uint256 constant ONE = 10**27;
     

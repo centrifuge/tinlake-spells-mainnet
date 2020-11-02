@@ -26,6 +26,7 @@ contract TinlakeSpellsTest is DSTest {
    
     address root_;
     address spell_;
+    address constant public PILE = 0x3fC72dA5545E2AB6202D81fbEb1C8273Be95068C;
 
     function setUp() public {
         spell = new TinlakeSpell();
@@ -43,14 +44,13 @@ contract TinlakeSpellsTest is DSTest {
         address assessor_ = spell.ASSESSOR();
         address coordinator_ = spell.COORDINATOR();
         address navFeed_ = spell.NAV_FEED();
-        address pile_ = spell.PILE();
         address assessorAdminToBeRemoved_ = spell.ASSESSOR_ADMIN_TO_BE_REMOVED();
         address assessorWrapper_ = spell.ASSESSOR_ADMIN_WRAPPER();
         address coordinatorAdminToBeRemoved_ = spell.COORDINATOR_ADMIN_TO_BE_REMOVED();
 
         CoordinatorLike coordinator = CoordinatorLike(coordinator_);
         NAVFeedLike navFeed = NAVFeedLike(navFeed_);
-        PileLike pile = PileLike(pile_);
+        PileLike pile = PileLike(PILE);
 
         // check if assessor admin to be removed has permissions
         assertHasPermissions(assessor_, assessorAdminToBeRemoved_);
