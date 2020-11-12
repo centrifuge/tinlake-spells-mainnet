@@ -36,67 +36,37 @@ contract TinlakeSpellsTest is DSTest {
 
     function testCast() public {
         // tinlake contracts 
-        address seniorMemberList_ = spell.SENIOR_MEMBERLIST();
+        address seniorOperatorNew_ = spell.SENIOR_OPERATOR_NEW();
+        address seniorOperatorOld_ = spell.SENIOR_OPERATOR_OLD();
+        address seniorTranche_ = spell.SENIOR_TRANCHE();
 
         // addresses for permissions setup
-        address seniorMemberListAdmin1_ = spell.SENIOR_MEMBERLIST_ADMIN1();
-         address seniorMemberListAdmin2_ = spell.SENIOR_MEMBERLIST_ADMIN2();
-        
-        // make sure permissions are not set yet
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin2_);
+        address seniorOperatorAdmin1_ = spell.SENIOR_OPERATOR_ADMIN1();
+        address seniorOperatorAdmin2_ = spell.SENIOR_OPERATOR_ADMIN2();
+        address seniorOperatorAdmin3_ = spell.SENIOR_OPERATOR_ADMIN3();
+        address seniorOperatorAdminOld_ = spell.SENIOR_OPERATOR_ADMIN_OLD();
+
+        // make sure permissions are set as expected prior to cast
+        assertHasNoPermissions(seniorTranche_, seniorOperatorNew_);
+        assertHasPermissions(seniorTranche_, seniorOperatorOld_);
+        assertHasNoPermissions(seniorOperatorNew_, seniorOperatorAdmin1_);
+        assertHasNoPermissions(seniorOperatorNew_, seniorOperatorAdmin2_);
+        assertHasNoPermissions(seniorOperatorNew_, seniorOperatorAdmin3_);
+        assertHasPermissions(seniorOperatorNew_, seniorOperatorAdminOld_);
         
         // give spell permissions on root contract
         AuthLike(root_).rely(spell_);
 
         spell.cast();
 
-        // make sure permissions were set
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin2_);
+        // make sure permissions are set correctly after cast
+        assertHasPermissions(seniorTranche_, seniorOperatorNew_);
+        assertHasNoPermissions(seniorTranche_, seniorOperatorOld_);
+        assertHasPermissions(seniorOperatorNew_, seniorOperatorAdmin1_);
+        assertHasPermissions(seniorOperatorNew_, seniorOperatorAdmin2_);
+        assertHasPermissions(seniorOperatorNew_, seniorOperatorAdmin3_);
+        assertHasNoPermissions(seniorOperatorNew_, seniorOperatorAdminOld_);
 
-    }
-
-    function testFailCastNoPermissions() public {
-        // tinlake contracts 
-        address seniorMemberList_ = spell.SENIOR_MEMBERLIST();
-
-        // addresses for permissions setup
-        address seniorMemberListAdmin1_ = spell.SENIOR_MEMBERLIST_ADMIN1();
-         address seniorMemberListAdmin2_ = spell.SENIOR_MEMBERLIST_ADMIN2();
-        
-        // make sure permissions are not set yet
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-        
-        // do not give spell permissions on root contract
-
-        spell.cast();
-    }
-
-    function testFailCastTwice() public {
-
-        // tinlake contracts 
-        address seniorMemberList_ = spell.SENIOR_MEMBERLIST();
-
-        // addresses for permissions setup
-        address seniorMemberListAdmin1_ = spell.SENIOR_MEMBERLIST_ADMIN1();
-         address seniorMemberListAdmin2_ = spell.SENIOR_MEMBERLIST_ADMIN2();
-        
-        // make sure permissions are not set yet
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-        
-        // give spell permissions on root contract
-        AuthLike(root_).rely(spell_);
-
-        spell.cast();
-
-        // make sure permissions were set
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-
-        spell.cast();
     }
 
     function assertHasPermissions(address con, address ward) public {
