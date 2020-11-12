@@ -1,7 +1,7 @@
 pragma solidity >=0.5.15 <0.6.0;
 
 import "ds-test/test.sol";
-import "./../src/spell.sol";
+import "./spell_template.sol";
 
 
 interface AuthLike {
