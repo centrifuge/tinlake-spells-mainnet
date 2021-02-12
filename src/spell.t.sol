@@ -1,7 +1,7 @@
 pragma solidity >=0.5.15 <0.6.0;
 
 import "ds-test/test.sol";
-import "./spell_template.sol";
+import "./spell.sol";
 
 
 interface AuthLike {
@@ -15,88 +15,31 @@ contract Hevm {
 }
 
 contract TinlakeSpellsTest is DSTest {
-
-    Hevm public hevm;
     TinlakeSpell spell;
     
-   
-    address root_;
     address spell_;
 
     function setUp() public {
         spell = new TinlakeSpell();
         spell_ = address(spell);
-        root_ = address(spell.ROOT());  
-        hevm = Hevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-        
-        // cheat: give testContract permissions on root contract by overriding storage 
-        // storage slot for permissions => keccak256(key, mapslot) (mapslot = 0)
-        hevm.store(root_, keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
+    }
+
+    function testSpecificPool(address root, address seniorMemberlist, address juniorMemberlist) public {
+        Hevm hevm = Hevm(root);
+        hevm.store(root, keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
+        AuthLike(root).rely(spell_);
+
+        assertHasNoPermissions(seniorMemberlist, spell.MEMBERADMIN());
+        assertHasNoPermissions(juniorMemberlist, spell.MEMBERADMIN());
+
+        spell.cast();
+
+        assertHasPermissions(seniorMemberlist, spell.MEMBERADMIN());
+        assertHasPermissions(juniorMemberlist, spell.MEMBERADMIN());
     }
 
     function testCast() public {
-        // tinlake contracts 
-        address seniorMemberList_ = spell.SENIOR_MEMBERLIST();
-
-        // addresses for permissions setup
-        address seniorMemberListAdmin1_ = spell.SENIOR_MEMBERLIST_ADMIN1();
-         address seniorMemberListAdmin2_ = spell.SENIOR_MEMBERLIST_ADMIN2();
-        
-        // make sure permissions are not set yet
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-        
-        // give spell permissions on root contract
-        AuthLike(root_).rely(spell_);
-
-        spell.cast();
-
-        // make sure permissions were set
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-
-    }
-
-    function testFailCastNoPermissions() public {
-        // tinlake contracts 
-        address seniorMemberList_ = spell.SENIOR_MEMBERLIST();
-
-        // addresses for permissions setup
-        address seniorMemberListAdmin1_ = spell.SENIOR_MEMBERLIST_ADMIN1();
-         address seniorMemberListAdmin2_ = spell.SENIOR_MEMBERLIST_ADMIN2();
-        
-        // make sure permissions are not set yet
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-        
-        // do not give spell permissions on root contract
-
-        spell.cast();
-    }
-
-    function testFailCastTwice() public {
-
-        // tinlake contracts 
-        address seniorMemberList_ = spell.SENIOR_MEMBERLIST();
-
-        // addresses for permissions setup
-        address seniorMemberListAdmin1_ = spell.SENIOR_MEMBERLIST_ADMIN1();
-         address seniorMemberListAdmin2_ = spell.SENIOR_MEMBERLIST_ADMIN2();
-        
-        // make sure permissions are not set yet
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-        
-        // give spell permissions on root contract
-        AuthLike(root_).rely(spell_);
-
-        spell.cast();
-
-        // make sure permissions were set
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-
-        spell.cast();
+        testSpecificPool(spell.ROOT_BL1(), spell.SENIOR_MEMBERLIST_BL1(), spell.JUNIOR_MEMBERLIST_BL1());
     }
 
     function assertHasPermissions(address con, address ward) public {
