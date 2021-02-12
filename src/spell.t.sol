@@ -25,7 +25,7 @@ contract TinlakeSpellsTest is DSTest {
     }
 
     function testSpecificPool(address root, address seniorMemberlist, address juniorMemberlist) public {
-        Hevm hevm = Hevm(root);
+        Hevm hevm = Hevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
         hevm.store(root, keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
         AuthLike(root).rely(spell_);
 
@@ -40,6 +40,7 @@ contract TinlakeSpellsTest is DSTest {
 
     function testCast() public {
         testSpecificPool(spell.ROOT_BL1(), spell.SENIOR_MEMBERLIST_BL1(), spell.JUNIOR_MEMBERLIST_BL1());
+        testSpecificPool(spell.ROOT_CF4(), spell.SENIOR_MEMBERLIST_CF4(), spell.JUNIOR_MEMBERLIST_CF4());
     }
 
     function assertHasPermissions(address con, address ward) public {
