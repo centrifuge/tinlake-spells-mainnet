@@ -23,6 +23,7 @@ contract MemberlistLike {
 
 contract MemberAdminLike {
     function relyAdmin(address) external;
+    function admins(address) external returns(uint);
 }
 
 // This spell adds wards to all memberlists
@@ -104,6 +105,6 @@ contract TinlakeSpell {
         rootPC3.relyContract(JUNIOR_MEMBERLIST_PC3, MEMBERADMIN);
 
         // Make onboard API an admin on the memberadmin
-        // MemberAdminLike(address(MEMBERADMIN)).relyAdmin(ONBOARD_API);
+        MemberAdminLike(address(MEMBERADMIN)).relyAdmin(ONBOARD_API);
     }   
 }
