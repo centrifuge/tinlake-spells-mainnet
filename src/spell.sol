@@ -66,7 +66,7 @@ contract TinlakeSpell {
     address constant public JUNIOR_MEMBERLIST_PC3 = 0xA768ACDe6B95720ba926E4a615ACA733e51F6FD1;
    
     // Onboard API admin account
-    address constant public ONBOARD_API = 0x0b4455B58d308A66d789cFB7B5D9A62E6D51490e;   
+    address constant public ONBOARD_API = 0xc7C81856392FdEd12adAe817782E5c33A97eCdB8;   
 
     function cast() public {
         require(!done, "spell-already-cast");
