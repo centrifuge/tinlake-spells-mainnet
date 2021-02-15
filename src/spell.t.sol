@@ -43,14 +43,22 @@ contract TinlakeSpellsTest is DSTest {
 
     function testCast() public {
         preCast(spell.ROOT_BL1(), spell.SENIOR_MEMBERLIST_BL1(), spell.JUNIOR_MEMBERLIST_BL1());
-        // preCast(spell.ROOT_CF4(), spell.SENIOR_MEMBERLIST_CF4(), spell.JUNIOR_MEMBERLIST_CF4());
+        preCast(spell.ROOT_CF4(), spell.SENIOR_MEMBERLIST_CF4(), spell.JUNIOR_MEMBERLIST_CF4());
         preCast(spell.ROOT_DBF1(), spell.SENIOR_MEMBERLIST_DBF1(), spell.JUNIOR_MEMBERLIST_DBF1());
+        preCast(spell.ROOT_FF1(), spell.SENIOR_MEMBERLIST_FF1(), spell.JUNIOR_MEMBERLIST_FF1());
+        preCast(spell.ROOT_HTC2(), spell.SENIOR_MEMBERLIST_HTC2(), spell.JUNIOR_MEMBERLIST_HTC2());
+        preCast(spell.ROOT_NS2(), spell.SENIOR_MEMBERLIST_NS2(), spell.JUNIOR_MEMBERLIST_NS2());
+        preCast(spell.ROOT_PC3(), spell.SENIOR_MEMBERLIST_PC3(), spell.JUNIOR_MEMBERLIST_HTC2());
 
         spell.cast();
 
         postCast(spell.ROOT_BL1(), spell.SENIOR_MEMBERLIST_BL1(), spell.JUNIOR_MEMBERLIST_BL1());
-        // postCast(spell.ROOT_CF4(), spell.SENIOR_MEMBERLIST_CF4(), spell.JUNIOR_MEMBERLIST_CF4());
+        postCast(spell.ROOT_CF4(), spell.SENIOR_MEMBERLIST_CF4(), spell.JUNIOR_MEMBERLIST_CF4());
         postCast(spell.ROOT_DBF1(), spell.SENIOR_MEMBERLIST_DBF1(), spell.JUNIOR_MEMBERLIST_DBF1());
+        postCast(spell.ROOT_FF1(), spell.SENIOR_MEMBERLIST_FF1(), spell.JUNIOR_MEMBERLIST_FF1());
+        postCast(spell.ROOT_HTC2(), spell.SENIOR_MEMBERLIST_HTC2(), spell.JUNIOR_MEMBERLIST_HTC2());
+        postCast(spell.ROOT_NS2(), spell.SENIOR_MEMBERLIST_NS2(), spell.JUNIOR_MEMBERLIST_NS2());
+        postCast(spell.ROOT_PC3(), spell.SENIOR_MEMBERLIST_PC3(), spell.JUNIOR_MEMBERLIST_PC3());
     }
 
     function assertHasPermissions(address con, address ward) public {

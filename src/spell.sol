@@ -80,28 +80,28 @@ contract TinlakeSpell {
         rootBL1.relyContract(JUNIOR_MEMBERLIST_BL1, MEMBERADMIN);
 
         TinlakeRootLike rootCF4 = TinlakeRootLike(address(ROOT_CF4));
-        // rootCF4.relyContract(SENIOR_MEMBERLIST_CF4, MEMBERADMIN);
-        // rootCF4.relyContract(JUNIOR_MEMBERLIST_CF4, MEMBERADMIN);
+        rootCF4.relyContract(SENIOR_MEMBERLIST_CF4, MEMBERADMIN);
+        rootCF4.relyContract(JUNIOR_MEMBERLIST_CF4, MEMBERADMIN);
 
         TinlakeRootLike rootDBF1 = TinlakeRootLike(address(ROOT_DBF1));
         rootDBF1.relyContract(SENIOR_MEMBERLIST_DBF1, MEMBERADMIN);
         rootDBF1.relyContract(JUNIOR_MEMBERLIST_DBF1, MEMBERADMIN);
 
         TinlakeRootLike rootFF1 = TinlakeRootLike(address(ROOT_FF1));
-        // rootFF1.relyContract(SENIOR_MEMBERLIST_FF1, MEMBERADMIN);
-        // rootFF1.relyContract(JUNIOR_MEMBERLIST_FF1, MEMBERADMIN);
+        rootFF1.relyContract(SENIOR_MEMBERLIST_FF1, MEMBERADMIN);
+        rootFF1.relyContract(JUNIOR_MEMBERLIST_FF1, MEMBERADMIN);
 
         TinlakeRootLike rootHTC2 = TinlakeRootLike(address(ROOT_HTC2));
-        // rootHTC2.relyContract(SENIOR_MEMBERLIST_HTC2, MEMBERADMIN);
-        // rootHTC2.relyContract(JUNIOR_MEMBERLIST_HTC2, MEMBERADMIN);
+        rootHTC2.relyContract(SENIOR_MEMBERLIST_HTC2, MEMBERADMIN);
+        rootHTC2.relyContract(JUNIOR_MEMBERLIST_HTC2, MEMBERADMIN);
 
         TinlakeRootLike rootNS2 = TinlakeRootLike(address(ROOT_NS2));
-        // rootNS2.relyContract(SENIOR_MEMBERLIST_NS2, MEMBERADMIN);
-        // rootNS2.relyContract(JUNIOR_MEMBERLIST_NS2, MEMBERADMIN);
+        rootNS2.relyContract(SENIOR_MEMBERLIST_NS2, MEMBERADMIN);
+        rootNS2.relyContract(JUNIOR_MEMBERLIST_NS2, MEMBERADMIN);
 
         TinlakeRootLike rootPC3 = TinlakeRootLike(address(ROOT_PC3));
-        // rootPC3.relyContract(SENIOR_MEMBERLIST_PC3, MEMBERADMIN);
-        // rootPC3.relyContract(JUNIOR_MEMBERLIST_PC3, MEMBERADMIN);
+        rootPC3.relyContract(SENIOR_MEMBERLIST_PC3, MEMBERADMIN);
+        rootPC3.relyContract(JUNIOR_MEMBERLIST_PC3, MEMBERADMIN);
 
         // Make onboard API an admin on the memberadmin
         // MemberAdminLike(address(MEMBERADMIN)).relyAdmin(ONBOARD_API);
