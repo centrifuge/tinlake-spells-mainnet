@@ -25,7 +25,7 @@ interface ERC20Like {
     function transferFrom(address from, address to, uint amount) external;
 }
 
-// Database Finance
+// Database Finance Reserve transfer spell
 contract TinlakeSpell {
 
     bool public done;
@@ -38,8 +38,7 @@ contract TinlakeSpell {
     address constant public SENIOR_TRANCHE = 0x68d2e0c8166d746f7Fd3a6Bad5bEF05c9EF69b9F;
 
     uint constant public payoutAmount = 14653858411942951370300;
-
-
+    
     function cast() public {
         require(!done, "spell-already-cast");
         done = true;
