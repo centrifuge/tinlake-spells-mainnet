@@ -16,7 +16,6 @@ pragma solidity >=0.5.15 <0.6.0;
 interface TinlakeRootLike {
     function relyContract(address, address) external;
     function denyContract(address, address) external;
-    function deny(address) external;
 }
 
 interface CoordinatorLike {
@@ -84,7 +83,6 @@ contract TinlakeSpell {
       navFeed.file("riskGroup", 5, ONE, 75 * 10 ** 25, uint(1000000003805175038051750380), 99.9589*10**25);
 
       // Remove incorrect permissions
-      root.deny(ADMIN_TO_BE_REMOVED);
       root.denyContract(SENIOR_MEMBERLIST, ADMIN_TO_BE_REMOVED);
       root.denyContract(JUNIOR_MEMBERLIST, ADMIN_TO_BE_REMOVED);
       root.denyContract(ASSESSOR, ADMIN_TO_BE_REMOVED);
