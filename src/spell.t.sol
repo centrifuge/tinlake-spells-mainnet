@@ -34,54 +34,37 @@ contract TinlakeSpellsTest is DSTest {
 
     function testCast() public {
         // tinlake contracts 
+        address oldPoolAdmin_ = address(spell.POOL_ADMIN_OLD());
+        address newPoolAdmin_ = address(spell.POOL_ADMIN_NEW());
+        address assessor_ = address(spell.ASSESSOR());
+        address clerk_ = spell.CLERK();
         address seniorMemberList_ = address(spell.SENIOR_MEMBERLIST());
         address juniorMemberList_ = address(spell.JUNIOR_MEMBERLIST());
-        address assessorAdmin_ = address(spell.ASSESSOR_ADMIN());
-        address navFeed_ = spell.NAV_FEED();    
-        NAVFeedLike navFeed = NAVFeedLike(navFeed_);
         
-        // addresses for permissions setup
-        address seniorMemberListAdmin1_ = address(spell.SENIOR_MEMBERLIST_ADMIN1());
-        address seniorMemberListAdmin2_ = address(spell.SENIOR_MEMBERLIST_ADMIN2());
-        address seniorMemberListAdminRemove_ = spell.SENIOR_MEMBERLIST_ADMIN_REMOVE();
-
-        address juniorMemberListAdmin1_ = spell.JUNIOR_MEMBERLIST_ADMIN1();
-        address juniorMemberListAdmin2_ = spell.JUNIOR_MEMBERLIST_ADMIN2();
-        address juniorMemberListAdmin3_ = spell.JUNIOR_MEMBERLIST_ADMIN3();
-
-        address assessorAdminAdmin1_ = spell.ASSESSOR_ADMIN_ADMIN1();
-        address assessorAdminAdmin2_ = spell.ASSESSOR_ADMIN_ADMIN2();
-       
-        // make sure permissions are not set yet
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdminRemove_);
-
-        assertHasNoPermissions(juniorMemberList_, juniorMemberListAdmin1_);
-        assertHasNoPermissions(juniorMemberList_, juniorMemberListAdmin2_);
-        assertHasNoPermissions(juniorMemberList_, juniorMemberListAdmin3_);
-
-        assertHasNoPermissions(assessorAdmin_, assessorAdminAdmin1_);
-        assertHasNoPermissions(assessorAdmin_, assessorAdminAdmin2_);
+        assertHasPermissions(assessor_, oldPoolAdmin_);
+        assertHasPermissions(clerk_, oldPoolAdmin_);
+        assertHasPermissions(seniorMemberList_, oldPoolAdmin_);
+        assertHasPermissions(juniorMemberList_, oldPoolAdmin_);
+        
+        assertHasNoPermissions(assessor_, newPoolAdmin_);
+        assertHasNoPermissions(clerk_, newPoolAdmin_);
+        assertHasNoPermissions(seniorMemberList_, newPoolAdmin_);
+        assertHasNoPermissions(juniorMemberList_, newPoolAdmin_);
 
         // give spell permissions on root contract
         AuthLike(root_).rely(spell_);
         spell.cast();
 
-        // make sure permissions were set
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin1_);
-        assertHasPermissions(seniorMemberList_, seniorMemberListAdmin2_);
-        assertHasNoPermissions(seniorMemberList_, seniorMemberListAdminRemove_);
+        // make sure permissions were moved
+        assertHasNoPermissions(assessor_, oldPoolAdmin_);
+        assertHasNoPermissions(clerk_, oldPoolAdmin_);
+        assertHasNoPermissions(seniorMemberList_, oldPoolAdmin_);
+        assertHasNoPermissions(juniorMemberList_, oldPoolAdmin_);
 
-        assertHasPermissions(juniorMemberList_, juniorMemberListAdmin1_);
-        assertHasPermissions(juniorMemberList_, juniorMemberListAdmin2_);
-        assertHasPermissions(juniorMemberList_, juniorMemberListAdmin3_);
-
-        assertHasPermissions(assessorAdmin_, assessorAdminAdmin1_);
-        assertHasPermissions(assessorAdmin_, assessorAdminAdmin2_);
-
-         // check discountRate set
-        assertEq(navFeed.discountRate(), spell.discountRate());
+        assertHasPermissions(assessor_, newPoolAdmin_);
+        assertHasPermissions(clerk_, newPoolAdmin_);
+        assertHasPermissions(seniorMemberList_, newPoolAdmin_);
+        assertHasPermissions(juniorMemberList_, newPoolAdmin_);
     }
 
     function testFailCastNoPermissions() public {        

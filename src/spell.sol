@@ -56,17 +56,18 @@ contract TinlakeSpell {
 
     function execute() internal {
         TinlakeRootLike root = TinlakeRootLike(address(ROOT));
-        DependLike poolAdmin = DependLike(address(POOL_ADMIN_NEW));
-        
-        root.relyContract(POOL_ADMIN_NEW, ASSESSOR);
-        root.relyContract(POOL_ADMIN_NEW, CLERK);
-        root.relyContract(POOL_ADMIN_NEW, SENIOR_MEMBERLIST);
-        root.relyContract(POOL_ADMIN_NEW, JUNIOR_MEMBERLIST);
-        
-        root.denyContract(POOL_ADMIN_OLD, ASSESSOR);
-        root.denyContract(POOL_ADMIN_OLD, CLERK);
-        root.denyContract(POOL_ADMIN_OLD, SENIOR_MEMBERLIST);
-        root.denyContract(POOL_ADMIN_OLD, JUNIOR_MEMBERLIST);
+        PoolAdminLike poolAdmin = PoolAdminLike(address(POOL_ADMIN_NEW));
+
+        root.relyContract(POOL_ADMIN_NEW, address(this));
+        root.relyContract(ASSESSOR, POOL_ADMIN_NEW);
+        root.relyContract(CLERK, POOL_ADMIN_NEW);
+        root.relyContract(SENIOR_MEMBERLIST, POOL_ADMIN_NEW);
+        root.relyContract(JUNIOR_MEMBERLIST, POOL_ADMIN_NEW);
+
+        root.denyContract(ASSESSOR, POOL_ADMIN_OLD);
+        root.denyContract(CLERK, POOL_ADMIN_OLD);
+        root.denyContract(SENIOR_MEMBERLIST, POOL_ADMIN_OLD);
+        root.denyContract(JUNIOR_MEMBERLIST, POOL_ADMIN_OLD);
 
         poolAdmin.depend("assessor", ASSESSOR);
         poolAdmin.depend("lending", CLERK);
