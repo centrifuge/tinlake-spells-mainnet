@@ -18,46 +18,36 @@ interface TinlakeRootLike {
     function denyContract(address, address) external;
 }
 
-interface NAVFeedLike {
-    function file(bytes32 name, uint value) external;
-    function file(bytes32 name, uint risk_, uint thresholdRatio_, uint ceilingRatio_, uint rate_, uint recoveryRatePD_) external;
-    function discountRate() external returns(uint);
+interface PoolAdminLike {
+    function depend(bytes32, address) external;
+    function relyAdmin(address) external;
+    function deny(address) external;
 }
 
-// This spell changes permissions for the junior & senior memberlists & assessor wrapper
-// & changes the discount rate on the NS2 deployment
 contract TinlakeSpell {
 
     bool public done;
-    string constant public description = "Tinlake Mainnet Spell";
+    string constant public description = "NS2 PoolAdmin Swap";
 
-    // MAINNET ADDRESSES
-    // The contracts in this list should correspond to a tinlake deployment
-    // https://github.com/centrifuge/tinlake-pool-config/blob/master/mainnet-production.json
-
-    // REVPOOL 1 root contracts
+    // NS2 contracts
     address constant public ROOT = 0x53b2d22d07E069a3b132BfeaaD275b10273d381E;
+    address constant public POOL_ADMIN_OLD = 0x6A82DdF0DF710fACD0414B37606dC9Db05a4F752;
+    address constant public POOL_ADMIN_NEW = 0xd7fb14d5C1259a47d46D156E74a9c3B69a147b4A;
+    address constant public ASSESSOR = 0x83E2369A33104120746B589Cc90180ed776fFb91;
+    address constant public CLERK = 0xA9eCF012dD36512e5fFCD5585D72386E46135Cdd;
     address constant public SENIOR_MEMBERLIST = 0x5B5CFD6E45F1407ABCb4BFD9947aBea1EA6649dA;
     address constant public JUNIOR_MEMBERLIST = 0x42C2483EEE8c1Fe46C398Ac296C59674F9eb88CD;
-    address constant public ASSESSOR_ADMIN = 0x46470030e1c732A9C2b541189471E47661311375;
-    address constant public NAV_FEED = 0x41fAD1Eb242De19dA0206B0468763333BB6C2B3D;
 
-    // permissions to be set senior memberlist
-    address constant public SENIOR_MEMBERLIST_ADMIN1 = 0xa7Aa917b502d86CD5A23FFbD9Ee32E013015e069;                                             
-    address constant public SENIOR_MEMBERLIST_ADMIN2 = 0x440B547fa81f8b34c7558722fa79cF1b56c1bDcf;
-    address constant public SENIOR_MEMBERLIST_ADMIN_REMOVE = 0xCE30bc6d0c9e489Ab06EC6E7F703E7DB69c5fa01;
+    // Admins
+    address constant public ADMIN1 = 0x71d9f8CFdcCEF71B59DD81AB387e523E2834F2b8;
+    address constant public ADMIN2 = 0x46a71eEf8DbcFcbAC7A0e8D5d6B634A649e61fb8;
+    address constant public ADMIN3 = 0xa7Aa917b502d86CD5A23FFbD9Ee32E013015e069;
+    address constant public ADMIN4 = 0x9eDec77dd2651Ce062ab17e941347018AD4eAEA9;
+    address constant public ADMIN5 = 0xd60f7CFC1E051d77031aC21D9DB2F66fE54AE312;
+    address constant public ADMIN6 = 0x7Cae9bD865610750a48575aF15CAFe1e460c96a8;
 
-    // permissions to be set junior memberlist
-    address constant public JUNIOR_MEMBERLIST_ADMIN1 = 0xa7Aa917b502d86CD5A23FFbD9Ee32E013015e069;                                             
-    address constant public JUNIOR_MEMBERLIST_ADMIN2 = 0xfEADaD6b75e6C899132587b7Cb3FEd60c8554821;
-    address constant public JUNIOR_MEMBERLIST_ADMIN3 = 0x440B547fa81f8b34c7558722fa79cF1b56c1bDcf;
-
-    // permissions assessor wrapper
-    address constant public ASSESSOR_ADMIN_ADMIN1 = 0xa7Aa917b502d86CD5A23FFbD9Ee32E013015e069;                                             
-    address constant public ASSESSOR_ADMIN_ADMIN2 = 0x440B547fa81f8b34c7558722fa79cF1b56c1bDcf;
-           
-    // new discount rate 7,5%                  
-    uint constant public discountRate = uint(1000000002378234398782343987);
+    address constant public DEPLOYER = 0x3018F3F7a1a919Fd9a1e0D8FEDbe9164B6DF04f6;
+    
     function cast() public {
         require(!done, "spell-already-cast");
         done = true;
@@ -66,26 +56,30 @@ contract TinlakeSpell {
 
     function execute() internal {
         TinlakeRootLike root = TinlakeRootLike(address(ROOT));
-        NAVFeedLike navFeed = NAVFeedLike(address(NAV_FEED));
-   
-        // add permissions  
-        // Assessor Admin
-        root.relyContract(ASSESSOR_ADMIN, ASSESSOR_ADMIN_ADMIN1);
-        root.relyContract(ASSESSOR_ADMIN, ASSESSOR_ADMIN_ADMIN2);
+        DependLike poolAdmin = DependLike(address(POOL_ADMIN_NEW));
         
-        // Junior Memeberlist
-        root.relyContract(JUNIOR_MEMBERLIST, JUNIOR_MEMBERLIST_ADMIN1);
-        root.relyContract(JUNIOR_MEMBERLIST, JUNIOR_MEMBERLIST_ADMIN2);
-        root.relyContract(JUNIOR_MEMBERLIST, JUNIOR_MEMBERLIST_ADMIN3);
+        root.relyContract(POOL_ADMIN_NEW, ASSESSOR);
+        root.relyContract(POOL_ADMIN_NEW, CLERK);
+        root.relyContract(POOL_ADMIN_NEW, SENIOR_MEMBERLIST);
+        root.relyContract(POOL_ADMIN_NEW, JUNIOR_MEMBERLIST);
+        
+        root.denyContract(POOL_ADMIN_OLD, ASSESSOR);
+        root.denyContract(POOL_ADMIN_OLD, CLERK);
+        root.denyContract(POOL_ADMIN_OLD, SENIOR_MEMBERLIST);
+        root.denyContract(POOL_ADMIN_OLD, JUNIOR_MEMBERLIST);
 
-        // Senior Memeberlist
-        root.relyContract(SENIOR_MEMBERLIST, SENIOR_MEMBERLIST_ADMIN1);
-        root.relyContract(SENIOR_MEMBERLIST, SENIOR_MEMBERLIST_ADMIN2);
-        root.denyContract(SENIOR_MEMBERLIST, SENIOR_MEMBERLIST_ADMIN_REMOVE);
+        poolAdmin.depend("assessor", ASSESSOR);
+        poolAdmin.depend("lending", CLERK);
+        poolAdmin.depend("seniorMemberlist", SENIOR_MEMBERLIST);
+        poolAdmin.depend("juniorMemberlist", JUNIOR_MEMBERLIST);
 
-        // NavFeed 
-        root.relyContract(NAV_FEED, address(this)); // required to file riskGroups & change discountRate
-        // change discountRate
-        navFeed.file("discountRate", discountRate);
+        poolAdmin.relyAdmin(ADMIN1);
+        poolAdmin.relyAdmin(ADMIN2);
+        poolAdmin.relyAdmin(ADMIN3);
+        poolAdmin.relyAdmin(ADMIN4);
+        poolAdmin.relyAdmin(ADMIN5);
+        poolAdmin.relyAdmin(ADMIN6);
+
+        poolAdmin.deny(DEPLOYER);
     }   
 }
