@@ -1,30 +1,41 @@
-pragma solidity >=0.5.15 <0.6.0;
+pragma solidity >=0.5.15;
 
 import "ds-test/test.sol";
 import "./../src/spell.sol";
+
 
 interface AuthLike {
     function wards(address) external returns(uint);
     function rely(address) external;
 }
 
-contract Hevm {
-    function warp(uint256) public;
-    function store(address, bytes32, bytes32) public;
+interface Hevm {
+    function warp(uint256) external;
+    function store(address, bytes32, bytes32) external;
+}
+
+interface PileLike {
+    function rates(uint rate) external view returns (uint, uint, uint ,uint48, uint);
+}
+
+interface AssessorLike {
+    function seniorInterestRate() external returns (uint);
 }
 
 contract TinlakeSpellsTest is DSTest {
 
-    Hevm public hevm;
+    Hevm hevm;
     TinlakeSpell spell;
-
+    
+   
     address root_;
     address spell_;
+    address constant public PILE = 0x3fC72dA5545E2AB6202D81fbEb1C8273Be95068C;
 
     function setUp() public {
         spell = new TinlakeSpell();
         spell_ = address(spell);
-        root_ = address(spell.ROOT());  
+        root_ = address(spell.NS2_ROOT());  
         hevm = Hevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
         
         // cheat: give testContract permissions on root contract by overriding storage 
@@ -33,50 +44,46 @@ contract TinlakeSpellsTest is DSTest {
     }
 
     function testCast() public {
-        // tinlake contracts 
-        address oldPoolAdmin_ = address(spell.POOL_ADMIN_OLD());
-        address newPoolAdmin_ = address(spell.POOL_ADMIN_NEW());
-        address assessor_ = address(spell.ASSESSOR());
-        address clerk_ = spell.CLERK();
-        address seniorMemberList_ = address(spell.SENIOR_MEMBERLIST());
-        address juniorMemberList_ = address(spell.JUNIOR_MEMBERLIST());
-        
-        assertHasPermissions(assessor_, oldPoolAdmin_);
-        assertHasPermissions(clerk_, oldPoolAdmin_);
-        assertHasPermissions(seniorMemberList_, oldPoolAdmin_);
-        assertHasPermissions(juniorMemberList_, oldPoolAdmin_);
-        
-        assertHasNoPermissions(assessor_, newPoolAdmin_);
-        assertHasNoPermissions(clerk_, newPoolAdmin_);
-        assertHasNoPermissions(seniorMemberList_, newPoolAdmin_);
-        assertHasNoPermissions(juniorMemberList_, newPoolAdmin_);
+
+        address assessor_ = spell.NS2_ASSESSOR();
+        address navFeed_ = spell.NS2_NAV_FEED();
+
+        AssessorLike assessor = AssessorLike(assessor_);
+        PileLike pile = PileLike(PILE);
 
         // give spell permissions on root contract
         AuthLike(root_).rely(spell_);
+
         spell.cast();
 
-        // make sure permissions were moved
-        assertHasNoPermissions(assessor_, oldPoolAdmin_);
-        assertHasNoPermissions(clerk_, oldPoolAdmin_);
-        assertHasNoPermissions(seniorMemberList_, oldPoolAdmin_);
-        assertHasNoPermissions(juniorMemberList_, oldPoolAdmin_);
-
-        assertHasPermissions(assessor_, newPoolAdmin_);
-        assertHasPermissions(clerk_, newPoolAdmin_);
-        assertHasPermissions(seniorMemberList_, newPoolAdmin_);
-        assertHasPermissions(juniorMemberList_, newPoolAdmin_);
-    }
-
-    function testFailCastNoPermissions() public {        
-        // do not give spell permissions on root contract
-        spell.cast();
-    }
-
-    function testFailCastTwice() public {
-        // give spell permissions on root contract
-        AuthLike(root_).rely(spell_);
-        spell.cast();
-        spell.cast();
+        // check seniorInterestRate
+        assertEq(assessor.seniorInterestRate(), spell.ns2_seniorInterestRate());
+        
+        //check riskGroups
+        // (,,uint ratePerSecond24,,) = pile.rates(24);
+        // assertEq(ratePerSecond24, uint(1000000002853881278538812785));
+        // (,,uint ratePerSecond25,,) = pile.rates(25);
+        // assertEq(ratePerSecond25, uint(1000000003012430238457635717));
+        // (,,uint ratePerSecond26,,) = pile.rates(26);
+        // assertEq(ratePerSecond26, uint(1000000003012430238457635717));
+        // (,,uint ratePerSecond27,,) = pile.rates(27);
+        // assertEq(ratePerSecond27, uint(1000000003170979198376458650));
+        // (,,uint ratePerSecond28,,) = pile.rates(28);
+        // assertEq(ratePerSecond28, uint(1000000002853881278538812785));
+        // (,,uint ratePerSecond29,,) = pile.rates(29);
+        // assertEq(ratePerSecond29, uint(1000000003012430238457635717));
+        // (,,uint ratePerSecond30,,) = pile.rates(30);
+        // assertEq(ratePerSecond30, uint(1000000003012430238457635717));
+        // (,,uint ratePerSecond31,,) = pile.rates(31);
+        // assertEq(ratePerSecond31, uint(1000000003170979198376458650));
+        // (,,uint ratePerSecond32,,) = pile.rates(32);
+        // assertEq(ratePerSecond32, uint(1000000002853881278538812785));
+        // (,,uint ratePerSecond33,,) = pile.rates(33);
+        // assertEq(ratePerSecond33, uint(1000000003012430238457635717));
+        // (,,uint ratePerSecond34,,) = pile.rates(34);
+        // assertEq(ratePerSecond34, uint(1000000003012430238457635717));
+        // (,,uint ratePerSecond35,,) = pile.rates(35);
+        // assertEq(ratePerSecond35, uint(1000000003170979198376458650));
     }
 
     function assertHasPermissions(address con, address ward) public {
