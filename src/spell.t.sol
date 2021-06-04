@@ -30,13 +30,13 @@ contract TinlakeSpellsTest is DSTest {
    
     address root_;
     address spell_;
-    address constant public PILE = 0x3fC72dA5545E2AB6202D81fbEb1C8273Be95068C;
+    address constant public PILE = 0x3eC5c16E7f2C6A80E31997C68D8Fa6ACe089807f;
 
     function setUp() public {
         spell = new TinlakeSpell();
         spell_ = address(spell);
         root_ = address(spell.NS2_ROOT());  
-        hevm = Hevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+        hevm = Hevm(HEVM_ADDRESS);
         
         // cheat: give testContract permissions on root contract by overriding storage 
         // storage slot for permissions => keccak256(key, mapslot) (mapslot = 0)
@@ -44,9 +44,7 @@ contract TinlakeSpellsTest is DSTest {
     }
 
     function testCast() public {
-
         address assessor_ = spell.NS2_ASSESSOR();
-        address navFeed_ = spell.NS2_NAV_FEED();
 
         AssessorLike assessor = AssessorLike(assessor_);
         PileLike pile = PileLike(PILE);
@@ -59,31 +57,15 @@ contract TinlakeSpellsTest is DSTest {
         // check seniorInterestRate
         assertEq(assessor.seniorInterestRate(), spell.ns2_seniorInterestRate());
         
-        //check riskGroups
-        // (,,uint ratePerSecond24,,) = pile.rates(24);
-        // assertEq(ratePerSecond24, uint(1000000002853881278538812785));
-        // (,,uint ratePerSecond25,,) = pile.rates(25);
-        // assertEq(ratePerSecond25, uint(1000000003012430238457635717));
-        // (,,uint ratePerSecond26,,) = pile.rates(26);
-        // assertEq(ratePerSecond26, uint(1000000003012430238457635717));
-        // (,,uint ratePerSecond27,,) = pile.rates(27);
-        // assertEq(ratePerSecond27, uint(1000000003170979198376458650));
-        // (,,uint ratePerSecond28,,) = pile.rates(28);
-        // assertEq(ratePerSecond28, uint(1000000002853881278538812785));
-        // (,,uint ratePerSecond29,,) = pile.rates(29);
-        // assertEq(ratePerSecond29, uint(1000000003012430238457635717));
-        // (,,uint ratePerSecond30,,) = pile.rates(30);
-        // assertEq(ratePerSecond30, uint(1000000003012430238457635717));
-        // (,,uint ratePerSecond31,,) = pile.rates(31);
-        // assertEq(ratePerSecond31, uint(1000000003170979198376458650));
-        // (,,uint ratePerSecond32,,) = pile.rates(32);
-        // assertEq(ratePerSecond32, uint(1000000002853881278538812785));
-        // (,,uint ratePerSecond33,,) = pile.rates(33);
-        // assertEq(ratePerSecond33, uint(1000000003012430238457635717));
-        // (,,uint ratePerSecond34,,) = pile.rates(34);
-        // assertEq(ratePerSecond34, uint(1000000003012430238457635717));
-        // (,,uint ratePerSecond35,,) = pile.rates(35);
-        // assertEq(ratePerSecond35, uint(1000000003170979198376458650));
+        // check a few riskGroups
+        (,,uint ratePerSecond41,,) = pile.rates(41);
+        assertEq(ratePerSecond41, uint(1000000001090820000000000000));
+        (,,uint ratePerSecond53,,) = pile.rates(53);
+        assertEq(ratePerSecond53, uint(1000000001547440000000000000));
+        (,,uint ratePerSecond65,,) = pile.rates(65);
+        assertEq(ratePerSecond65, uint(1000000001996765601217656012));
+        (,,uint ratePerSecond97,,) = pile.rates(97);
+        assertEq(ratePerSecond97, uint(1000000003166222729578893962));
     }
 
     function assertHasPermissions(address con, address ward) public {
