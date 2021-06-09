@@ -1,0 +1,29 @@
+
+// SPDX-License-Identifier: AGPL-3.0-only
+pragma solidity >=0.7.0;
+
+// Pezesha 1 addresses at Wed Jun  9 09:29:06 CEST 2021
+contract Addresses {
+	address constant public ACTIONS = 0x80F33ED0A69935dd74310b9D0009D0BA647Cf223;
+	address constant public ASSESSOR = 0x76343D8BDACAFbabE2a4476ec004Ac3D5501DdF8;
+	address constant public COLLECTOR = 0x813B7c6692A56ff440eD6C638b7357d040bC8958;
+	address constant public COORDINATOR = 0x3e3f323a95018Ee133D47c4841f5AF235E2aF4f5;
+	address constant public FEED = 0xd9b2471F5c7494254b8d52f4aB3146e747ABc9AB;
+	address constant public JUNIOR_MEMBERLIST = 0x364B69aFc0101Af31089C5aE234D8444C355e8a0;
+	address constant public JUNIOR_OPERATOR = 0x54c2B9AE8D556c74677dA2e286c8198b354E7d27;
+	address constant public JUNIOR_TOKEN = 0xD7a70741B44F5ddaB371c2D2EB9D030A7c1a4BA0;
+	address constant public JUNIOR_TRANCHE = 0xF53EBEDAe8E3e0C77BA12e26c504ee1B0Eccd147;
+	address constant public PILE = 0xAAEaCfcCc3d3249f125Ba0644495560309C266cB;
+	address constant public POOL_ADMIN = 0x68c19d14937e43ACa58538628ac2F99e167F2C9C;
+	address constant public PROXY_REGISTRY = 0xc9045c815bf123ad12ea75b9a7c579c1e05051f9;
+	address constant public RESERVE = 0x5Aa3F927619d522d21AE9522F018030038aDC0E6;
+	address constant public ROOT_CONTRACT = 0x235893Bf9695F68a922daC055598401D832b538b;
+	address constant public SENIOR_MEMBERLIST = 0x3e77f47e5e1Ec71fabE473347400A06d9Af13eE3;
+	address constant public SENIOR_OPERATOR = 0x2844b69835F182190eB6F602C6cfA2981E143c20;
+	address constant public SENIOR_TOKEN = 0x419A0B6f55Ff030cC50c6C5178d579D5828D8Db8;
+	address constant public SENIOR_TRANCHE = 0xB9c79d0721E378D9CF8D18a1e74CB462D57B571F;
+	address constant public SHELF = 0x4Ca7049E61629407a7E829564C1Dd2538d70182C;
+	address constant public TINLAKE_CURRENCY = 0xad3E3Fc59dff318BecEaAb7D00EB4F68b1EcF195;
+	address constant public TITLE = 0x33a764604EA9624B4258d7d6dCc08Ce2b8EDa825;  
+}
+
