@@ -64,6 +64,9 @@ contract TinlakeSpellsTest is DSTest {
         AuthLike(spell.BL1_ROOT_CONTRACT()).rely(spell_);
         AuthLike(spell.CF4_ROOT_CONTRACT()).rely(spell_);
 
+        assertHasNoPermissions(spell.HTC2_FEED(), spell.htc2_oracle());
+        assertHasNoPermissions(spell.DBF1_FEED(), spell.dbf1_oracle());
+
         spell.cast();
 
         assertEq(br3_assessor.seniorInterestRate(), spell.br3_seniorInterestRate());
@@ -86,8 +89,11 @@ contract TinlakeSpellsTest is DSTest {
         (,,uint ratePerSecondFf1_5,,) = ff1_pile.rates(5);
         assertEq(ratePerSecondFf1_5, uint(1000000004433030000));
 
-        assertEq(bl1_coordinator.minimumEpochTime(), 1 days - 10 minutes);
-        assertEq(cf4_coordinator.challengeTime(), 30 minutes);
+        assertEq(bl1_coordinator.minimumEpochTime(), spell.bl1_minEpochTime());
+        assertEq(cf4_coordinator.challengeTime(), spell.cf4_challengeTime());
+
+        assertHasPermissions(spell.HTC2_FEED(), spell.htc2_oracle());
+        assertHasPermissions(spell.DBF1_FEED(), spell.dbf1_oracle());
     }
 
     function assertHasPermissions(address con, address ward) public {

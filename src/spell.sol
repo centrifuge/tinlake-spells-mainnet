@@ -34,6 +34,9 @@ contract TinlakeSpell is Addresses {
 
     address constant public dbf1_oracle = 0xE84a6555777452c34Bc1Bf3929484083E81d940a;
 
+    uint constant public bl1_minEpochTime = 1 days - 10 minutes;
+    uint constant public cf4_challengeTime = 30 minutes;
+
     uint256 constant ONE = 10**27;
     address self;
     
@@ -148,7 +151,7 @@ contract TinlakeSpell is Addresses {
         root.relyContract(FF1_ASSESSOR, address(this));
         root.relyContract(FF1_FEED, address(this));
 
-        FileLike(FF1_ASSESSOR).file("seniorInterestRate", 1000000001585489599188229325);
+        FileLike(FF1_ASSESSOR).file("seniorInterestRate", ff1_seniorInterestRate);
 
         // risk group: 1 - P A, APR: 5.35%
         navFeed.file("riskGroup", 1, ONE, ONE, uint(1000000001696470000), 99.5*10**25);
@@ -171,13 +174,13 @@ contract TinlakeSpell is Addresses {
         TinlakeRootLike root = TinlakeRootLike(address(BL1_ROOT_CONTRACT));
         root.relyContract(BL1_COORDINATOR, address(this));
 
-        FileLike(BL1_COORDINATOR).file("minimumEpochTime", 1 days - 10 minutes);
+        FileLike(BL1_COORDINATOR).file("minimumEpochTime", bl1_minEpochTime);
     }
 
     function updateCF4() internal {
         TinlakeRootLike root = TinlakeRootLike(address(CF4_ROOT_CONTRACT));
         root.relyContract(CF4_COORDINATOR, address(this));
 
-        FileLike(CF4_COORDINATOR).file("challengeTime", 30 minutes);
+        FileLike(CF4_COORDINATOR).file("challengeTime", cf4_challengeTime);
     }
 }
