@@ -24,13 +24,13 @@ contract TinlakeSpell is Addresses {
     bool public done;
     string constant public description = "Tinlake Rate Update spell";
 
-    uint constant public br3_seniorInterestRate = uint(1000000003170979198376458650);
-    uint constant public br3_discountRate = uint(1000000004100076103500761035);
+    uint constant public br3_seniorInterestRate = uint(1000000003170979198376458650); // 10.00%
+    uint constant public br3_discountRate = uint(1000000004100076103500761035); // 12.93%
 
-    uint constant public htc2_seniorInterestRate = uint(1000000002219685438863521055);
+    uint constant public htc2_seniorInterestRate = uint(1000000002219685438863521055); // 7.00%
     address constant public htc2_oracle = 0x47B4B2a7a674da66a557a508f3A8e7b68a4759C3;
 
-    uint constant public ff1_seniorInterestRate = uint(1000000001585489599188229325);
+    uint constant public ff1_seniorInterestRate = uint(1000000001585489599188229325); // 5.00%
 
     address constant public dbf1_oracle = 0xE84a6555777452c34Bc1Bf3929484083E81d940a;
 
