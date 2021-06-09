@@ -150,15 +150,15 @@ contract TinlakeSpell is Addresses {
 
         FileLike(FF1_ASSESSOR).file("seniorInterestRate", 1000000001585489599188229325);
 
-        // risk group: 1 - PIPE A, APR: 5.35%
+        // risk group: 1 - P A, APR: 5.35%
         navFeed.file("riskGroup", 1, ONE, ONE, uint(1000000001696470000), 99.5*10**25);
-        // risk group: 2 - PIPE BBB, APR: 5.83%
+        // risk group: 2 - P BBB, APR: 5.83%
         navFeed.file("riskGroup", 2, ONE, ONE, uint(1000000001848680000), 99.5*10**25);
-        // risk group: 3 - PIPE BB, APR: 6.3%
+        // risk group: 3 - P BB, APR: 6.3%
         navFeed.file("riskGroup", 3, ONE, ONE, uint(1000000001997720000), 99.5*10**25);
-        // risk group: 4 - PIPE B, APR: 6.77%
+        // risk group: 4 - P B, APR: 6.77%
         navFeed.file("riskGroup", 4, ONE, ONE, uint(1000000002146750000), 99.5*10**25);
-        // risk group: 5 - Corl, APR: 13.98%
+        // risk group: 5 - C, APR: 13.98%
         navFeed.file("riskGroup", 5, ONE, ONE, uint(1000000004433030000), 98.5*10**25);
     }
 
