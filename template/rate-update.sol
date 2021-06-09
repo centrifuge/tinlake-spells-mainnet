@@ -24,8 +24,8 @@ contract TinlakeSpell is Addresses {
     bool public done;
     string constant public description = "Tinlake Rate Update spell";
 
-    uint constant public seniorInterestRate = uint(1000000003170979198376458650);
-    uint constant public discountRate = uint(1000000004100076103500761035);
+    // TODO: put new DROP APR here
+    uint constant public seniorInterestRate = uint(1000000001268391679350583460);
 
     uint256 constant ONE = 10**27;
     address self;
@@ -45,6 +45,8 @@ contract TinlakeSpell is Addresses {
         root.relyContract(FEED, self);
 
         FileLike(ASSESSOR).file("seniorInterestRate", seniorInterestRate);
-        navFeed.file("discountRate", discountRate);
+
+        // TODO: put file calls here
+        navFeed.file("riskGroup", 41, ONE, 85*10**25, uint(1000000001090820000000000000), 99.96*10**25);
     }
 }
