@@ -22,6 +22,11 @@ interface AssessorLike {
     function seniorInterestRate() external returns (uint);
 }
 
+interface CoordinatorLike {
+    function minimumEpochTime() external returns(uint);
+    function challengeTime() external returns(uint);
+}
+
 contract TinlakeSpellsTest is DSTest {
 
     Hevm hevm;
@@ -46,8 +51,12 @@ contract TinlakeSpellsTest is DSTest {
         AssessorLike br3_assessor = AssessorLike(spell.BR3_ASSESSOR());
         AssessorLike htc2_assessor = AssessorLike(spell.HTC2_ASSESSOR());
         AssessorLike ff1_assessor = AssessorLike(spell.FF1_ASSESSOR());
+        NAVFeedLike br3_feed = NAVFeedLike(spell.BR3_FEED());
         PileLike htc2_pile = PileLike(spell.HTC2_PILE());
         PileLike ff1_pile = PileLike(spell.FF1_PILE());
+        CoordinatorLike bl1_coordinator = CoordinatorLike(spell.BL1_COORDINATOR());
+        CoordinatorLike cf4_coordinator = CoordinatorLike(spell.CF4_COORDINATOR());
+
         AuthLike(spell.BR3_ROOT_CONTRACT()).rely(spell_);
         AuthLike(spell.HTC2_ROOT_CONTRACT()).rely(spell_);
         AuthLike(spell.FF1_ROOT_CONTRACT()).rely(spell_);
@@ -61,8 +70,8 @@ contract TinlakeSpellsTest is DSTest {
         assertEq(htc2_assessor.seniorInterestRate(), spell.htc2_seniorInterestRate());
         assertEq(ff1_assessor.seniorInterestRate(), spell.ff1_seniorInterestRate());
 
-        // TODO: discount rate
-        
+        assertEq(br3_feed.discountRate(), spell.br3_discountRate());
+
         (,,uint ratePerSecondHtc2_1,,) = htc2_pile.rates(1);
         assertEq(ratePerSecondHtc2_1, uint(1000000001585490000));
         (,,uint ratePerSecondHtc2_16,,) = htc2_pile.rates(16);
@@ -76,6 +85,9 @@ contract TinlakeSpellsTest is DSTest {
         assertEq(ratePerSecondFf1_3, uint(1000000001997720000));
         (,,uint ratePerSecondFf1_5,,) = ff1_pile.rates(5);
         assertEq(ratePerSecondFf1_5, uint(1000000004433030000));
+
+        assertEq(bl1_coordinator.minimumEpochTime(), 1 days - 10 minutes);
+        assertEq(cf4_coordinator.challengeTime(), 30 minutes);
     }
 
     function assertHasPermissions(address con, address ward) public {
