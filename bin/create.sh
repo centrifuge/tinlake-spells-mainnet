@@ -7,14 +7,17 @@ if [ -z "$1" ] ; then
 fi
 
 if [ -z "$2" ] ; then
-  echo "Contract to migrate missing"
+  echo "Template missing"
   exit 1
 fi
 
 POOL_ID=$1
-CONTRACT_TO_MIGRATE=$2
+TEMPLATE=$2
 
-POOLS_FILE=$(curl -s https://cloudflare-ipfs.com/ipfs/QmVwBZwhJPyP8ThbZ3m6D9i59mFJPNAKHFoi4SgAzyX1K9)
+# TODO: this should be loaded from the repo
+IPFS_HASH="Qma1RWF9Hsv37gRJqBUMFKZ9mD26bwegVf6xkvZway4FCv"
+
+POOLS_FILE=$(curl -s https://cloudflare-ipfs.com/ipfs/$IPFS_HASH)
 NAME=$(echo $POOLS_FILE | jq -r ".[\"$POOL_ID\"].metadata.shortName")
 ADDRESSES=$(echo $POOLS_FILE | jq -r ".[\"$POOL_ID\"].addresses" | jq -r 'keys[] as $k | "\taddress constant public \($k) = \(.[$k]);"')
 
@@ -28,5 +31,5 @@ $ADDRESSES
 }
 """ > './src/addresses.sol'
 
-cat template/$2-migration.sol > './src/spell.sol'
-cat template/$2-migration.t.sol > './src/spell.t.sol'
+cat template/$TEMPLATE.sol > './src/spell.sol'
+cat template/$TEMPLATE.t.sol > './src/spell.t.sol'
