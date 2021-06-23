@@ -5,6 +5,7 @@ pragma solidity >=0.7.0;
 contract Addresses {
 	address constant public ACTIONS = address(0);
 	address constant public ASSESSOR = address(0);
+	address constant public CLERK = address(0);
 	address constant public COLLECTOR = address(0);
 	address constant public COORDINATOR = address(0);
 	address constant public FEED = address(0);

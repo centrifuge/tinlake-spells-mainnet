@@ -2,7 +2,7 @@
 pragma solidity >=0.7.0;
 
 import "ds-test/test.sol";
-import "./spell.sol";
+import "./reserve-migration.sol";
 import "tinlake-math/math.sol";
 
 interface Hevm {

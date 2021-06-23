@@ -1,5 +1,10 @@
 # tinlake kovan spells
 
+## template creation
+```bash
+    ./bin/create.sh [POOL_ID] [TEMPLATE_NAME]
+```
+
 ## tests
 
 set env
@@ -16,7 +21,7 @@ run tests
 
 set env
 
-```
+```bash
     ETH_RPC_URL=https://mainnet.infura.io/v3/<INFURA_KEY>
     ETH_KEYSTORE
     ETH_PASSWORD
