@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "ds-test/test.sol";
 import "tinlake-math/math.sol";
-import "./htc-coordinator-migration.sol";
+import "./spell.sol";
 
 interface IAuth {
     function wards(address) external returns(uint);
@@ -15,10 +15,10 @@ interface IAssessor {
     function reserve() external returns(address); 
     function seniorRatio() external returns(uint);
     function totalBalance() external returns(uint);
-    function seniorDebt() external returns(uint);
-    function seniorBalance() external returns(uint);
-    function calcSeniorTokenPrice(uint NAV, uint reserve) external returns(uint);
-    function calcJuniorTokenPrice(uint NAV, uint reserve) external returns(uint);
+    function seniorDebt_() external returns(uint);
+    function seniorBalance_() external returns(uint);
+    function calcSeniorTokenPrice(uint NAV, uint reserve_) external returns(uint);
+    function calcJuniorTokenPrice(uint NAV, uint reserve_) external returns(uint);
 }
 
 interface INav {
@@ -110,9 +110,13 @@ contract TinlakeSpellsTest is DSTest, Math {
     function testCast() public {
         // give spell permissions on root contract
         AuthLike(root_).rely(spell_);
+
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002378234398782343987);
+
         spell.cast();
             
         assertMigrationCoordinator();
+        assertDiscountChange();
     }
 
     function testFailCastNoPermissions() public {
@@ -164,7 +168,7 @@ contract TinlakeSpellsTest is DSTest, Math {
         assert(coordinator.gotFullValidSolution() == coordinatorOld.gotFullValidSolution());
 
         // calculate opoch values correctly
-        uint epochSeniorAsset = safeAdd(assessor.seniorDebt(), assessor.seniorBalance());
+        uint epochSeniorAsset = safeAdd(assessor.seniorDebt_(), assessor.seniorBalance_());
         uint epochNAV = INav(assessor.navFeed()).currentNAV();
         uint epochReserve = assessor.totalBalance();
         // calculate current token prices which are used for the execute
@@ -204,5 +208,21 @@ contract TinlakeSpellsTest is DSTest, Math {
         assertEq(juniorRedeemOrder, juniorRedeemOrderOld);
         assertEq(juniorSupplyOrder, juniorSupplyOrderOld);
         assertEq(seniorSupplyOrder, seniorSupplyOrderOld);
+    }
+
+    function assertDiscountChange() public {
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002243467782851344495);
+
+        hevm.warp(block.timestamp + 4 days);
+        spell.setDiscount(1);
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002108701166920345002);
+
+        hevm.warp(block.timestamp + 4 days);
+        spell.setDiscount(2);
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000001973934550989345509);
+
+        hevm.warp(block.timestamp + 4 days);
+        spell.setDiscount(3);
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000001839167935058346017);
     }
 }
