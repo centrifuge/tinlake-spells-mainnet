@@ -1,9 +1,8 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-only\
 pragma solidity >=0.7.0;
 pragma experimental ABIEncoderV2;
 
 import "ds-test/test.sol";
-import "tinlake-math/math.sol";
 import "./spell.sol";
 
 interface IAuth {
@@ -22,7 +21,7 @@ interface IAssessor {
 }
 
 interface INav {
-function currentNAV() external view returns(uint);
+    function currentNAV() external view returns(uint);
 }
 
 interface ITranche {
@@ -59,23 +58,74 @@ interface ICoordinator  {
     function poolClosing() external returns(bool);
 }
 
-interface Hevm {
+interface IHevm {
     function warp(uint256) external;
     function store(address, bytes32, bytes32) external;
 }
 
-contract TinlakeSpellsTest is DSTest, Math {
+contract BaseSpellTest is DSTest {
 
-    Hevm public hevm;
+    IHevm public t_hevm;
     TinlakeSpell spell;
+
+    ICoordinator t_coordinator;
+    ITranche t_seniorTranche;
+    ITranche t_juniorTranche;
+    SpellERC20Like t_currency;
+   
+    address spell_;
+    address t_root_;
+    address t_shelf_;
+    address t_reserve_;
+    address t_reserveOld_;
+    address t_assessor_;
+    address t_clerk_;
+    address t_coordinator_;
+    address t_juniorTranche_;
+    address t_seniorTranche_;
+    address t_currency_;
+    address t_pot_;
+
+    uint poolReserveDAI;
+
+    function initSpell() public {
+        spell = new TinlakeSpell();
+        spell_ = address(spell);
+
+        t_root_ = address(spell.ROOT_CONTRACT());  
+        t_hevm = IHevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+
+        t_coordinator = ICoordinator(spell.COORDINATOR_NEW());
+        t_seniorTranche = ITranche(spell.SENIOR_TRANCHE());
+        t_juniorTranche = ITranche(spell.JUNIOR_TRANCHE());
+        t_currency = SpellERC20Like(spell.TINLAKE_CURRENCY());
+        t_reserveOld_ = spell.RESERVE();
+
+        t_coordinator_ = address(t_coordinator);
+        t_seniorTranche_ = address(t_seniorTranche);
+        t_juniorTranche_ = address(t_juniorTranche);
+        t_currency_ = address(t_currency);
+
+        poolReserveDAI = t_currency.balanceOf(t_reserveOld_);
+        // cheat: give testContract permissions on root contract by overriding storage 
+        // storage slot for permissions => keccak256(key, mapslot) (mapslot = 0)
+        t_hevm.store(t_root_, keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
+    }
+
+    function castSpell() public {
+        // give spell permissions on root contract
+        AuthLike(t_root_).rely(spell_);
+        spell.cast();
+    }
+}
+
+contract SpellTest is BaseSpellTest {
 
     IAssessor assessor;
     ICoordinator coordinator;
     ITranche seniorTranche;
     ITranche juniorTranche;
    
-    address spell_;
-    address root_;
     address reserve_;
     address assessor_;
     address coordinator_;
@@ -83,12 +133,11 @@ contract TinlakeSpellsTest is DSTest, Math {
     address juniorTranche_;
     address seniorTranche_;
 
-    function setUp() public {
+    function setUp() public virtual {
+        initSpell();
+
         spell = new TinlakeSpell();
         spell_ = address(spell);
-
-        root_ = address(spell.ROOT());  
-        hevm = Hevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
         assessor = IAssessor(spell.ASSESSOR());
         coordinator = ICoordinator(spell.COORDINATOR_NEW());
@@ -98,24 +147,20 @@ contract TinlakeSpellsTest is DSTest, Math {
         assessor_ = address(assessor);
         reserve_ = spell.RESERVE();
         coordinator_ = address(coordinator);
-        coordinatorOld_ = spell.COORDINATOR_OLD();
+        coordinatorOld_ = spell.COORDINATOR();
         seniorTranche_ = address(seniorTranche);
         juniorTranche_ = address(juniorTranche);
-       
-        // cheat: give testContract permissions on root contract by overriding storage 
-        // storage slot for permissions => keccak256(key, mapslot) (mapslot = 0)
-        hevm.store(root_, keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
     }
 
     function testCast() public {
         // give spell permissions on root contract
-        AuthLike(root_).rely(spell_);
+        AuthLike(t_root_).rely(spell_);
 
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002378234398782343987);
 
         spell.cast();
             
-        assertMigrationCoordinator();
+        // assertMigrationCoordinator();
         assertDiscountChange();
     }
 
@@ -126,7 +171,7 @@ contract TinlakeSpellsTest is DSTest, Math {
 
     function testFailCastTwice() public {
         // give spell permissions on root contract
-        AuthLike(root_).rely(spell_);
+        AuthLike(t_root_).rely(spell_);
         spell.cast();
         spell.cast();
     }
@@ -142,7 +187,7 @@ contract TinlakeSpellsTest is DSTest, Math {
     }
 
     function assertMigrationCoordinator() public {
-        ICoordinator coordinatorOld = ICoordinator(spell.COORDINATOR_OLD());
+        ICoordinator coordinatorOld = ICoordinator(spell.COORDINATOR());
     
         // check dependencies
         assertEq(coordinator.assessor(), assessor_);
@@ -196,14 +241,14 @@ contract TinlakeSpellsTest is DSTest, Math {
 
     function assertOrderMigration() public {
         (uint seniorRedeemSubmission, uint juniorRedeemSubmission, uint juniorSupplySubmission, uint seniorSupplySubmission) = coordinator.bestSubmission();
-        (uint seniorRedeemSubmissionOld, uint juniorRedeemSubmissionOld, uint juniorSupplySubmissionOld, uint seniorSupplySubmissionOld) = ICoordinator(spell.COORDINATOR_OLD()).bestSubmission();
+        (uint seniorRedeemSubmissionOld, uint juniorRedeemSubmissionOld, uint juniorSupplySubmissionOld, uint seniorSupplySubmissionOld) = ICoordinator(spell.COORDINATOR()).bestSubmission();
         assertEq(seniorRedeemSubmission, seniorRedeemSubmissionOld);
         assertEq(juniorRedeemSubmission, juniorRedeemSubmissionOld);
         assertEq(juniorSupplySubmission, juniorSupplySubmissionOld);
         assertEq(seniorSupplySubmission, seniorSupplySubmissionOld);
 
         (uint seniorRedeemOrder, uint juniorRedeemOrder, uint juniorSupplyOrder, uint seniorSupplyOrder) = coordinator.order();
-        (uint seniorRedeemOrderOld, uint juniorRedeemOrderOld, uint juniorSupplyOrderOld, uint seniorSupplyOrderOld) = ICoordinator(spell.COORDINATOR_OLD()).order();
+        (uint seniorRedeemOrderOld, uint juniorRedeemOrderOld, uint juniorSupplyOrderOld, uint seniorSupplyOrderOld) = ICoordinator(spell.COORDINATOR()).order();
         assertEq(seniorRedeemOrder, seniorRedeemOrderOld);
         assertEq(juniorRedeemOrder, juniorRedeemOrderOld);
         assertEq(juniorSupplyOrder, juniorSupplyOrderOld);
@@ -213,16 +258,21 @@ contract TinlakeSpellsTest is DSTest, Math {
     function assertDiscountChange() public {
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002243467782851344495);
 
-        hevm.warp(block.timestamp + 4 days);
+        t_hevm.warp(block.timestamp + 4 days);
         spell.setDiscount(1);
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002108701166920345002);
 
-        hevm.warp(block.timestamp + 4 days);
+        t_hevm.warp(block.timestamp + 4 days);
         spell.setDiscount(2);
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000001973934550989345509);
 
-        hevm.warp(block.timestamp + 4 days);
+        t_hevm.warp(block.timestamp + 4 days);
         spell.setDiscount(3);
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000001839167935058346017);
+    }
+
+    // --- Math ---
+    function safeAdd(uint x, uint y) internal pure returns (uint z) {
+        require((z = x + y) >= x, "math-add-overflow");
     }
 }
