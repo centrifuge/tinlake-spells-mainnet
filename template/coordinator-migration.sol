@@ -61,8 +61,6 @@ contract TinlakeSpell is Addresses {
     // TODO: set new coordinator address here
     address constant public COORDINATOR_NEW = address(0);
 
-    address self;
-
     // permissions to be set
     function cast() public {
         require(!done, "spell-already-cast");
