@@ -38,4 +38,5 @@ contract SpellRPCTest is TinlakeRPCTests, BaseSpellTest {
     
         initRPC();
     }
+
 }

@@ -29,7 +29,7 @@ pragma solidity >=0.7.0;
 contract Addresses {
 $ADDRESSES  
 }
-""" > './src/addresses.sol'
+""" > './src/draft/addresses.sol'
 
-cat template/$TEMPLATE.sol > './src/spell.sol'
-cat template/$TEMPLATE.t.sol > './src/spell.t.sol'
+cat template/$TEMPLATE.sol > './src/draft/spell.sol'
+cat template/$TEMPLATE.t.sol > './src/draft/spell.t.sol'

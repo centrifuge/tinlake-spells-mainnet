@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.7.0;
 
-// New Silver 2 addresses at Mon Jul  5 18:14:49 WEST 2021
+// New Silver 2 addresses at Wed Jul  7 11:27:09 WEST 2021
 contract Addresses {
 	address constant public ACTIONS = 0x80F33ED0A69935dd74310b9D0009D0BA647Cf223;
 	address constant public AO_REWARD_RECIPIENT = 0x7Cae9bD865610750a48575aF15CAFe1e460c96a8;

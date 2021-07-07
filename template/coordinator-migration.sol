@@ -53,18 +53,14 @@ interface NAVFeedLike {
     function discountRate() external view returns (uint256);
 }
 
-// spell for: ns2 coordinator migration
 contract TinlakeSpell is Addresses {
 
     bool public done;
-    string constant public description = "Tinlake NS2 coordinator migration mainnet Spell";
+    string constant public description = "Tinlake coordinator migration mainnet spell";
 
-    address constant public COORDINATOR_NEW = 0x22a1caca2EE82e9cE7Ef900FD961891b66deB7cA;
+    // TODO: set new coordinator address here
+    address constant public COORDINATOR_NEW = address(0);
 
-    uint[4] discountRates = [1000000002243467782851344495, 1000000002108701166920345002, 1000000001973934550989345509, 1000000001839167935058346017];
-    uint[4] timestamps;
-    bool[4] rateAlreadySet = [false, false, false, false];
-    
     address self;
 
     // permissions to be set
@@ -76,28 +72,18 @@ contract TinlakeSpell is Addresses {
 
     function execute() internal {
         SpellTinlakeRootLike root = SpellTinlakeRootLike(ROOT_CONTRACT);
-        self = address(this);
 
         // set spell as ward on the core contract to be able to wire the new contracts correctly
-        root.relyContract(JUNIOR_TRANCHE, self);
-        root.relyContract(SENIOR_TRANCHE, self);
-        root.relyContract(ASSESSOR, self);
-        root.relyContract(RESERVE, self);
-        root.relyContract(COORDINATOR_NEW, self);
-        root.relyContract(FEED, self);
-        root.relyContract(CLERK, self);
+        root.relyContract(JUNIOR_TRANCHE, address(this));
+        root.relyContract(SENIOR_TRANCHE, address(this));
+        root.relyContract(ASSESSOR, address(this));
+        root.relyContract(RESERVE, address(this));
+        root.relyContract(COORDINATOR_NEW, address(this));
+        root.relyContract(FEED, address(this));
+        root.relyContract(CLERK, address(this));
     
         // contract migration --> assumption: root contract is already ward on the new contracts
         migrateCoordinator();
-
-        timestamps = [
-            block.timestamp + 0 days,
-            block.timestamp + 4 days,
-            block.timestamp + 8 days,
-            block.timestamp + 12 days
-        ];
-
-        setDiscount(0);
     }
 
     function migrateCoordinator() internal {
@@ -123,12 +109,4 @@ contract TinlakeSpell is Addresses {
         MigrationLike(COORDINATOR_NEW).migrate(COORDINATOR);
     }
 
-    function setDiscount(uint i) public {
-        require(block.timestamp >= timestamps[i], "not-yet-executable");
-        require(i == 0 || NAVFeedLike(FEED).discountRate() == discountRates[i-1], "incorrect-execution-order");
-        require(rateAlreadySet[i] == false, "already-executed");
-
-        rateAlreadySet[i] = true;
-        NAVFeedLike(FEED).file("discountRate", discountRates[i]);
-    }
 }
