@@ -87,7 +87,7 @@ contract TinlakeSpell is Addresses {
     }
 
     function migrateCoordinator() internal {
-         // migrate dependencies 
+        // migrate dependencies
         DependLike(COORDINATOR_NEW).depend("assessor", ASSESSOR);
         DependLike(COORDINATOR_NEW).depend("juniorTranche", JUNIOR_TRANCHE);
         DependLike(COORDINATOR_NEW).depend("seniorTranche", SENIOR_TRANCHE);

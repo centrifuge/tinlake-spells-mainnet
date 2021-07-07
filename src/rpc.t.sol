@@ -3,7 +3,7 @@ pragma solidity >=0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "ds-test/test.sol";
-import "./spell.t.sol";
+import "./draft/spell.t.sol";
 import "../lib/tinlake-rpc-tests/src/contracts/rpc-tests.sol";
 
 

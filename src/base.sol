@@ -3,7 +3,7 @@ pragma solidity >=0.7.0;
 pragma experimental ABIEncoderV2;
 
 import "ds-test/test.sol";
-import "./spell.sol";
+import "./draft/spell.sol";
 
 interface IAuth {
     function wards(address) external returns(uint);
