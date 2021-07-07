@@ -16,8 +16,6 @@ contract SpellTest is BaseSpellTest {
         // give spell permissions on root contract
         AuthLike(spell.ROOT_CONTRACT()).rely(address(spell));
 
-        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002378234398782343987);
-
         spell.cast();
             
         assertMigrationCoordinator();
@@ -61,27 +59,19 @@ contract SpellTest is BaseSpellTest {
         assertEq(t_coordinator.bestSubScore(), coordinatorOld.bestSubScore());
         assert(t_coordinator.gotFullValidSolution() == coordinatorOld.gotFullValidSolution());
 
-        // calculate opoch values correctly
-        uint epochSeniorAsset = safeAdd(t_assessor.seniorDebt_(), t_assessor.seniorBalance_());
-        uint epochNAV = INav(t_assessor.navFeed()).currentNAV();
-        uint epochReserve = t_assessor.totalBalance();
-        // calculate current token prices which are used for the execute
-        uint epochSeniorTokenPrice = t_assessor.calcSeniorTokenPrice(epochNAV, epochReserve);
-        uint epochJuniorTokenPrice = t_assessor.calcJuniorTokenPrice(epochNAV, epochReserve);
-
-        assertEq(t_coordinator.epochSeniorTokenPrice(), epochSeniorTokenPrice);
-        assertEq(t_coordinator.epochJuniorTokenPrice(), epochJuniorTokenPrice);
-        assertEq(t_coordinator.epochNAV(), epochNAV);
-        assertEq(t_coordinator.epochSeniorAsset(), epochSeniorAsset);
-        assertEq(t_coordinator.epochReserve(), epochReserve);
+        assertEq(t_coordinator.epochSeniorTokenPrice(), coordinatorOld.epochSeniorTokenPrice());
+        assertEq(t_coordinator.epochJuniorTokenPrice(), coordinatorOld.epochJuniorTokenPrice());
+        assertEq(t_coordinator.epochNAV(), coordinatorOld.epochNAV());
+        assertEq(t_coordinator.epochSeniorAsset(), coordinatorOld.epochSeniorAsset());
+        assertEq(t_coordinator.epochReserve(), coordinatorOld.epochReserve());
 
         assert(t_coordinator.submissionPeriod() == coordinatorOld.submissionPeriod());
         assertEq(t_coordinator.weightSeniorRedeem(), coordinatorOld.weightSeniorRedeem());
         assertEq(t_coordinator.weightJuniorRedeem(), coordinatorOld.weightJuniorRedeem());
         assertEq(t_coordinator.weightJuniorSupply(), coordinatorOld.weightJuniorSupply());
         assertEq(t_coordinator.weightSeniorSupply(), coordinatorOld.weightSeniorSupply());
-        assertEq(t_coordinator.minChallengePeriodEnd (), block.timestamp + t_coordinator.challengeTime());
-        assertEq(t_coordinator.challengeTime(), 1800);
+        assertEq(t_coordinator.minChallengePeriodEnd (), coordinatorOld.minChallengePeriodEnd());
+        assertEq(t_coordinator.challengeTime(), coordinatorOld.challengeTime());
         assertEq(t_coordinator.bestRatioImprovement(), coordinatorOld.bestRatioImprovement());
         assertEq(t_coordinator.bestReserveImprovement(), coordinatorOld.bestReserveImprovement());
         assert(t_coordinator.poolClosing() == false);

@@ -12,16 +12,17 @@ interface IAuth {
 interface IAssessor {
     function navFeed() external returns(address);
     function reserve() external returns(address); 
-    function seniorRatio() external returns(uint);
-    function totalBalance() external returns(uint);
-    function seniorDebt_() external returns(uint);
-    function seniorBalance_() external returns(uint);
-    function calcSeniorTokenPrice(uint NAV, uint reserve_) external returns(uint);
-    function calcJuniorTokenPrice(uint NAV, uint reserve_) external returns(uint);
+    function seniorRatio() external view returns(uint);
+    function totalBalance() external view returns(uint);
+    function seniorDebt_() external view returns(uint);
+    function seniorBalance_() external view returns(uint);
+    function calcSeniorTokenPrice(uint NAV, uint reserve_) external view returns(uint);
+    function calcJuniorTokenPrice(uint NAV, uint reserve_) external view returns(uint);
 }
 
 interface INav {
     function currentNAV() external view returns(uint);
+    function approximatedNAV() external view returns(uint);
 }
 
 interface ITranche {
