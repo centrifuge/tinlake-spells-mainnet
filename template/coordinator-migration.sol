@@ -79,7 +79,6 @@ contract TinlakeSpell is Addresses {
         root.relyContract(ASSESSOR, address(this));
         root.relyContract(RESERVE, address(this));
         root.relyContract(COORDINATOR_NEW, address(this));
-        root.relyContract(FEED, address(this));
         root.relyContract(CLERK, address(this));
     
         // contract migration --> assumption: root contract is already ward on the new contracts

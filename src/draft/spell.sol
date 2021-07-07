@@ -59,7 +59,7 @@ contract TinlakeSpell is Addresses {
     string constant public description = "Tinlake coordinator migration mainnet spell";
 
     // TODO: set new coordinator address here
-    address constant public COORDINATOR_NEW = address(0);
+    address constant public COORDINATOR_NEW = 0x22a1caca2EE82e9cE7Ef900FD961891b66deB7cA;
 
     address self;
 
@@ -79,7 +79,6 @@ contract TinlakeSpell is Addresses {
         root.relyContract(ASSESSOR, address(this));
         root.relyContract(RESERVE, address(this));
         root.relyContract(COORDINATOR_NEW, address(this));
-        root.relyContract(FEED, address(this));
         root.relyContract(CLERK, address(this));
     
         // contract migration --> assumption: root contract is already ward on the new contracts
@@ -87,7 +86,7 @@ contract TinlakeSpell is Addresses {
     }
 
     function migrateCoordinator() internal {
-         // migrate dependencies 
+        // migrate dependencies
         DependLike(COORDINATOR_NEW).depend("assessor", ASSESSOR);
         DependLike(COORDINATOR_NEW).depend("juniorTranche", JUNIOR_TRANCHE);
         DependLike(COORDINATOR_NEW).depend("seniorTranche", SENIOR_TRANCHE);

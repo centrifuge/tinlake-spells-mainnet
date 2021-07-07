@@ -52,18 +52,4 @@ contract SpellTest is BaseSpellTest {
         spell.cast();
     }
 
-    function assertHasPermissions(address con, address ward) public {
-        uint perm = IAuth(con).wards(ward);
-        assertEq(perm, 1);
-    }
-
-    function assertHasNoPermissions(address con, address ward) public {
-        uint perm = IAuth(con).wards(ward);
-        assertEq(perm, 0);
-    }
-
-    // --- Math ---
-    function safeAdd(uint x, uint y) internal pure returns (uint z) {
-        require((z = x + y) >= x, "math-add-overflow");
-    }
 }
