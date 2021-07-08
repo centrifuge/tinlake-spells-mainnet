@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.7.0;
 
-// New Silver 2 addresses at Wed 23 Jun 2021 09:31:31 CEST
+// New Silver 2 addresses at Wed Jul  7 16:08:49 WEST 2021
 contract Addresses {
 	address constant public ACTIONS = 0x80F33ED0A69935dd74310b9D0009D0BA647Cf223;
 	address constant public AO_REWARD_RECIPIENT = 0x7Cae9bD865610750a48575aF15CAFe1e460c96a8;
@@ -22,7 +22,7 @@ contract Addresses {
 	address constant public PILE = 0x3eC5c16E7f2C6A80E31997C68D8Fa6ACe089807f;
 	address constant public POOL_ADMIN = 0xd7fb14d5C1259a47d46D156E74a9c3B69a147b4A;
 	address constant public PROXY_REGISTRY = 0xC9045c815bF123ad12EA75b9A7c579C1e05051f9;
-	address constant public RESERVE = 0xD9E4391cF31638a8Da718Ff0Bf69249Cdc48fB2B;
+	address constant public RESERVE = 0x1f5Fa2E665609CE4953C65CE532Ac8B47EC97cD5;
 	address constant public ROOT_CONTRACT = 0x53b2d22d07E069a3b132BfeaaD275b10273d381E;
 	address constant public SENIOR_MEMBERLIST = 0x5B5CFD6E45F1407ABCb4BFD9947aBea1EA6649dA;
 	address constant public SENIOR_OPERATOR = 0x230f2E19D6c2Dc0c441c2150D4dD9d67B563A60C;

@@ -15,7 +15,7 @@ POOL_ID=$1
 TEMPLATE=$2
 
 # TODO: this should be loaded from the repo
-IPFS_HASH="Qma1RWF9Hsv37gRJqBUMFKZ9mD26bwegVf6xkvZway4FCv"
+IPFS_HASH="QmUvZkxKFDyMAR5LmJjZC2ydhisGjrpCD2UbnUdJL6uD5t"
 
 POOLS_FILE=$(curl -s https://cloudflare-ipfs.com/ipfs/$IPFS_HASH)
 NAME=$(echo $POOLS_FILE | jq -r ".[\"$POOL_ID\"].metadata.shortName")
@@ -29,7 +29,7 @@ pragma solidity >=0.7.0;
 contract Addresses {
 $ADDRESSES  
 }
-""" > './src/addresses.sol'
+""" > './src/draft/addresses.sol'
 
-cat template/$TEMPLATE.sol > './src/spell.sol'
-cat template/$TEMPLATE.t.sol > './src/spell.t.sol'
+cat template/$TEMPLATE.sol > './src/draft/spell.sol'
+cat template/$TEMPLATE.t.sol > './src/draft/spell.t.sol'

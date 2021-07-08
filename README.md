@@ -2,7 +2,7 @@
 
 ## template creation
 ```bash
-./bin/create.sh [POOL_ID] [TEMPLATE_NAME]
+/bin/create.sh [POOL_ID] [TEMPLATE_NAME]
 ```
 
 ## tests
@@ -14,7 +14,7 @@ ETH_RPC_URL=https://mainnet.infura.io/v3/<INFURA_KEY>
 
 run tests
 ```bash 
-./bin/test.sh      
+make test   
 ```
 
 ## deploy
@@ -34,8 +34,7 @@ ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
 run bash commands
 
 ```bash 
-dapp create "src/spell.sol:TinlakeSpell"  
-dapp verify-contract --async "src/spell.sol:TinlakeSpell" <SPELL_ADDRESS>
+make deploy
 ```
 
 
