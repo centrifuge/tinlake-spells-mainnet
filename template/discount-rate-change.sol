@@ -63,8 +63,6 @@ contract TinlakeSpell is Addresses {
     uint[4] timestamps;
     bool[4] rateAlreadySet = [false, false, false, false];
     
-    address self;
-
     // permissions to be set
     function cast() public {
         require(!done, "spell-already-cast");

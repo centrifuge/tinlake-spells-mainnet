@@ -58,9 +58,12 @@ contract TinlakeSpell is Addresses {
     bool public done;
     string constant public description = "Tinlake coordinator migration mainnet spell";
 
-    // TODO: set new coordinator address here
     address constant public COORDINATOR_NEW = 0x22a1caca2EE82e9cE7Ef900FD961891b66deB7cA;
 
+    uint[4] discountRates = [1000000002243467782851344495, 1000000002108701166920345002, 1000000001973934550989345509, 1000000001839167935058346017];
+    uint[4] timestamps;
+    bool[4] rateAlreadySet = [false, false, false, false];
+    
     // permissions to be set
     function cast() public {
         require(!done, "spell-already-cast");
@@ -78,9 +81,19 @@ contract TinlakeSpell is Addresses {
         root.relyContract(RESERVE, address(this));
         root.relyContract(COORDINATOR_NEW, address(this));
         root.relyContract(CLERK, address(this));
-    
+        root.relyContract(FEED, address(this));
+
         // contract migration --> assumption: root contract is already ward on the new contracts
         migrateCoordinator();
+
+        timestamps = [
+            block.timestamp + 0 days,
+            block.timestamp + 4 days,
+            block.timestamp + 8 days,
+            block.timestamp + 12 days
+        ];
+
+        setDiscount(0);
     }
 
     function migrateCoordinator() internal {
@@ -104,6 +117,15 @@ contract TinlakeSpell is Addresses {
 
         // migrate state
         MigrationLike(COORDINATOR_NEW).migrate(COORDINATOR);
+    }
+
+    function setDiscount(uint i) public {
+        require(block.timestamp >= timestamps[i], "not-yet-executable");
+        require(i == 0 || NAVFeedLike(FEED).discountRate() == discountRates[i-1], "incorrect-execution-order");
+        require(rateAlreadySet[i] == false, "already-executed");
+
+        rateAlreadySet[i] = true;
+        NAVFeedLike(FEED).file("discountRate", discountRates[i]);
     }
 
 }

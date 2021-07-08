@@ -19,6 +19,7 @@ contract SpellTest is BaseSpellTest {
         spell.cast();
             
         assertMigrationCoordinator();
+        assertDiscountChange();
     }
 
     function testFailCastNoPermissions() public {
@@ -92,6 +93,22 @@ contract SpellTest is BaseSpellTest {
         assertEq(juniorRedeemOrder, juniorRedeemOrderOld);
         assertEq(juniorSupplyOrder, juniorSupplyOrderOld);
         assertEq(seniorSupplyOrder, seniorSupplyOrderOld);
+    }
+
+    function assertDiscountChange() public {
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002243467782851344495);
+
+        t_hevm.warp(block.timestamp + 4 days);
+        spell.setDiscount(1);
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002108701166920345002);
+
+        t_hevm.warp(block.timestamp + 4 days);
+        spell.setDiscount(2);
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000001973934550989345509);
+
+        t_hevm.warp(block.timestamp + 4 days);
+        spell.setDiscount(3);
+        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000001839167935058346017);
     }
 
     function assertHasPermissions(address con, address ward) public {
