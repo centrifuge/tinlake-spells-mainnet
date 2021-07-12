@@ -1,36 +1,40 @@
-# tinlake kovan spells
+# tinlake mainnet spells
+
+## template creation
+```bash
+/bin/create.sh [POOL_ID] [TEMPLATE_NAME]
+```
 
 ## tests
 
 set env
 ```
-    ETH_RPC_URL=https://mainnet.infura.io/v3/<INFURA_KEY>
+ETH_RPC_URL=https://mainnet.infura.io/v3/<INFURA_KEY>
 ```   
 
 run tests
 ```bash 
- ./bin/test.sh      
+make test   
 ```
 
 ## deploy
 
 set env
 
-```
-    ETH_RPC_URL=https://mainnet.infura.io/v3/<INFURA_KEY>
-    ETH_KEYSTORE
-    ETH_PASSWORD
-    ETH_FROM
-    ETH_GAS_PRICE
-    ETH_GAS=10000000
-    ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
+```bash
+ETH_RPC_URL=https://mainnet.infura.io/v3/<INFURA_KEY>
+ETH_KEYSTORE
+ETH_PASSWORD
+ETH_FROM
+ETH_GAS_PRICE
+ETH_GAS=10000000
+ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
 ```
 
 run bash commands
 
 ```bash 
- dapp create "src/spell.sol:TinlakeSpell"  
- dapp verify-contract --async "src/spell.sol:TinlakeSpell" <SPELL_ADDRESS>
+make deploy
 ```
 
 
