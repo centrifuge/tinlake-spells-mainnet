@@ -53,6 +53,10 @@ interface SpellERC20Like {
     function approve(address, uint) external;
 }
 
+interface PoolRegistryLike {
+  function file(address pool, bool live, string memory name, string memory data) external;
+  function find(address pool) external view returns (bool live, string memory name, string memory data);
+}
 
 contract TinlakeSpell is Addresses {
 
@@ -60,6 +64,7 @@ contract TinlakeSpell is Addresses {
     string constant public description = "Tinlake maker integration mainnet spell";
 
     address constant public GOVERNANCE = 0xf3BceA7494D8f3ac21585CA4b0E52aa175c24C25;
+    address constant public POOL_REGISTRY = 0xddf1C516Cf87126c6c610B52FD8d609E67Fb6033;
 
     // TODO: set new swapped contract address here
     address constant public COORDINATOR_NEW = address(0);
@@ -88,6 +93,10 @@ contract TinlakeSpell is Addresses {
     // TODO: check these
     uint constant public ASSESSOR_MIN_SENIOR_RATIO = 0;
     uint constant public MAT_BUFFER = 0.01 * 10**27;
+
+    // TODO set these
+    string constant public SLUG = "";
+    string constant public IPFS_HASH = "";
 
     // permissions to be set
     function cast() public {
@@ -127,6 +136,8 @@ contract TinlakeSpell is Addresses {
 
         // for mkr integration: set minSeniorRatio in Assessor to 0      
         FileLike(ASSESSOR_NEW).file("minSeniorRatio", ASSESSOR_MIN_SENIOR_RATIO);
+
+        updateRegistry();
     }
 
     function migrateAssessor() internal {
@@ -265,6 +276,10 @@ contract TinlakeSpell is Addresses {
         poolAdmin.relyAdmin(POOL_ADMIN4);
         poolAdmin.relyAdmin(POOL_ADMIN5);
         poolAdmin.relyAdmin(AO_POOL_ADMIN);
+    }
+
+    function updateRegistry() internal {
+        PoolRegistryLike(POOL_REGISTRY).file(ROOT_CONTRACT, true, SLUG, IPFS_HASH);
     }
 
 }
