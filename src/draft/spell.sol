@@ -66,11 +66,12 @@ contract TinlakeSpell is Addresses {
     address constant public GOVERNANCE = 0xf3BceA7494D8f3ac21585CA4b0E52aa175c24C25;
     address constant public POOL_REGISTRY = 0xddf1C516Cf87126c6c610B52FD8d609E67Fb6033;
 
-    // TODO: set new swapped contract address here
-    address constant public COORDINATOR_NEW = address(0);
-    address constant public ASSESSOR_NEW  = address(0);
-    address constant public RESERVE_NEW = address(0);
-    address constant public SENIOR_TRANCHE_NEW = address(0);
+    address constant public COORDINATOR_NEW = 0x913D894eb0BbbA47Be31b1300e1F3C514e08444E;
+    address constant public ASSESSOR_NEW  = 0x6fFC105daF813cADff854b829c5302678FA42320;
+    address constant public RESERVE_NEW = 0xEefDb15cB37d502845b12368DC4AC70Ab5A37f26;
+    address constant public SENIOR_TRANCHE_NEW = 0xfc9E18e714c21539456d5f77F7F635781Cf56Af0;
+    address constant public POOL_ADMIN = 0x20ca8D29F1ad57e85A73c2aA99dFF46241C94A1A;
+    address constant public CLERK = 0x04140410249C4e9bB85f948135671Af30D941034;
 
     // TODO: set maker contract addresses here
     address constant public SPOTTER = address(0);
@@ -88,7 +89,7 @@ contract TinlakeSpell is Addresses {
     address constant public POOL_ADMIN3 = 0x46a71eEf8DbcFcbAC7A0e8D5d6B634A649e61fb8;
     address constant public POOL_ADMIN4 = 0xa7Aa917b502d86CD5A23FFbD9Ee32E013015e069;
     address constant public POOL_ADMIN5 = 0x9eDec77dd2651Ce062ab17e941347018AD4eAEA9;
-    address constant public AO_POOL_ADMIN = address(0);
+    address constant public AO_POOL_ADMIN = 0xB170597E474CC124aE8Fe2b335d0d80E08bC3e37;
 
     // TODO: check these
     uint constant public ASSESSOR_MIN_SENIOR_RATIO = 0;
