@@ -15,7 +15,7 @@ POOL_ID=$1
 TEMPLATE=$2
 
 # TODO: this should be loaded from the repo
-IPFS_HASH="QmUvZkxKFDyMAR5LmJjZC2ydhisGjrpCD2UbnUdJL6uD5t"
+IPFS_HASH="QmTHPaaGYKSuups2DkyQJbAB4YGz5QE2s7NqdmVaxWjBqy"
 
 POOLS_FILE=$(curl -s https://cloudflare-ipfs.com/ipfs/$IPFS_HASH)
 NAME=$(echo $POOLS_FILE | jq -r ".[\"$POOL_ID\"].metadata.shortName")
