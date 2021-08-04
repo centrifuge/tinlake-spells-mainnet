@@ -36,8 +36,8 @@ contract SpellRPCTest is TinlakeRPCTests, BaseSpellTest {
         initRPC();
     }
 
-    function testLoanCycleWithMaker() public {
-        runLoanCycleWithMaker();
+    function testLoanCycleWithoutMaker() public {
+        runLoanCycleWithoutMaker();
     }
 
 }
