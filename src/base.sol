@@ -64,6 +64,22 @@ interface IHevm {
     function store(address, bytes32, bytes32) external;
 }
 
+interface SpellERC20Like {
+    function balanceOf(address) external view returns (uint256);
+    function transferFrom(address, address, uint) external returns (bool);
+    function approve(address, uint) external;
+}
+
+interface FileLike {
+    function file(bytes32, uint) external;
+    function file(bytes32, address) external;
+}
+
+interface AuthLike {
+    function rely(address) external;
+    function deny(address) external;
+}
+
 contract BaseSpellTest is DSTest {
 
     IHevm public t_hevm;
@@ -80,7 +96,7 @@ contract BaseSpellTest is DSTest {
 
         t_hevm = IHevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
-        t_coordinator = ICoordinator(spell.COORDINATOR_NEW());
+        t_coordinator = ICoordinator(spell.COORDINATOR());
         t_seniorTranche = ITranche(spell.SENIOR_TRANCHE());
         t_juniorTranche = ITranche(spell.JUNIOR_TRANCHE());
         t_currency = SpellERC20Like(spell.TINLAKE_CURRENCY());

@@ -33,14 +33,11 @@ contract SpellRPCTest is TinlakeRPCTests, BaseSpellTest {
         SHELF = spell.SHELF();
         TINLAKE_CURRENCY = spell.TINLAKE_CURRENCY();
 
-        // rpc tests should use the new addresses from the spell
-        COORDINATOR = spell.COORDINATOR_NEW();
-    
         initRPC();
     }
 
-    function testLoanCycleWithMaker() public {
-        runLoanCycleWithMaker();
+    function testLoanCycleWithoutMaker() public {
+        runLoanCycleWithoutMaker();
     }
 
 }
