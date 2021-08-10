@@ -73,13 +73,15 @@ contract TinlakeSpell is Addresses {
     address constant public POOL_ADMIN = 0x20ca8D29F1ad57e85A73c2aA99dFF46241C94A1A;
     address constant public CLERK = 0x04140410249C4e9bB85f948135671Af30D941034;
 
-    // TODO: set maker contract addresses here
+    // TODO: check these global maker addresses
     address constant public SPOTTER = address(0);
     address constant public VAT = address(0);
     address constant public JUG = address(0);
-    address constant public URN = address(0);
     address constant public LIQ = address(0);
     address constant public END = address(0);
+
+    // TODO: set these pool specific maker addresses
+    address constant public URN = address(0);
     address constant public RWA_GEM = address(0);
     address constant public MAKER_MGR = address(0);
 
@@ -89,6 +91,7 @@ contract TinlakeSpell is Addresses {
     address constant public POOL_ADMIN3 = 0x46a71eEf8DbcFcbAC7A0e8D5d6B634A649e61fb8;
     address constant public POOL_ADMIN4 = 0xa7Aa917b502d86CD5A23FFbD9Ee32E013015e069;
     address constant public POOL_ADMIN5 = 0x9eDec77dd2651Ce062ab17e941347018AD4eAEA9;
+    address constant public POOL_ADMIN6 = 0xEf270f8877Aa1875fc13e78dcA31f3235210368f;
     address constant public AO_POOL_ADMIN = 0xB170597E474CC124aE8Fe2b335d0d80E08bC3e37;
 
     // TODO: check these
