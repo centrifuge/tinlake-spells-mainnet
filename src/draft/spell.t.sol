@@ -202,12 +202,12 @@ contract SpellTest is BaseSpellTest {
         assertEq(t_poolAdmin.assessor(), spell.ASSESSOR_NEW());
         assertEq(t_poolAdmin.lending(), spell.CLERK());
         assertEq(t_poolAdmin.seniorMemberlist(), spell.SENIOR_MEMBERLIST());
-        assertEq(t_poolAdmin.juniorMemberlist(), spell.JUNIOR_MEMBERLIST);
+        assertEq(t_poolAdmin.juniorMemberlist(), spell.JUNIOR_MEMBERLIST());
 
         assertHasPermissions(spell.ASSESSOR_NEW(), spell.POOL_ADMIN());
         assertHasPermissions(spell.CLERK(), spell.POOL_ADMIN());
         assertHasPermissions(spell.SENIOR_MEMBERLIST(), spell.POOL_ADMIN());
-        assertHasPermissions(spell.JUNIOR_MEMBERLIST, spell.POOL_ADMIN());
+        assertHasPermissions(spell.JUNIOR_MEMBERLIST(), spell.POOL_ADMIN());
         // todo add admin checks once we have addresses
 
         assertHasPermissions(spell.POOL_ADMIN(), spell.GOVERNANCE());

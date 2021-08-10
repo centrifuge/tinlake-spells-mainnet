@@ -4,12 +4,12 @@ pragma experimental ABIEncoderV2;
 
 import "./../../../lib/tinlake/src/lender/assessor.sol";
 
-contract MigratedMKRAssessor is MKRAssessor {
+contract MigratedAssessor is Assessor {
     
     bool public done;
     address public migratedFrom;
 
-    function migrate(address clone_) public auth {
+    function migrate(address clone_) auth {
         require(!done, "migration already finished");
         done = true;
         migratedFrom = clone_;

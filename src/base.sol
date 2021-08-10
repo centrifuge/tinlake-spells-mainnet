@@ -151,7 +151,7 @@ contract BaseSpellTest is DSTest {
     function initSpell() public {
         spell = new TinlakeSpell();
 
-        t_hevm = IHevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+        t_hevm = IHevm(HEVM_ADDRESS);
 
         t_coordinator = ICoordinator(spell.COORDINATOR_NEW());
         t_seniorTranche = ITranche(spell.SENIOR_TRANCHE_NEW());

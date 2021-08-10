@@ -66,24 +66,24 @@ contract TinlakeSpell is Addresses {
     address constant public GOVERNANCE = 0xf3BceA7494D8f3ac21585CA4b0E52aa175c24C25;
     address constant public POOL_REGISTRY = 0xddf1C516Cf87126c6c610B52FD8d609E67Fb6033;
 
-    address constant public COORDINATOR_NEW = 0x913D894eb0BbbA47Be31b1300e1F3C514e08444E;
-    address constant public ASSESSOR_NEW  = 0x6fFC105daF813cADff854b829c5302678FA42320;
-    address constant public RESERVE_NEW = 0xEefDb15cB37d502845b12368DC4AC70Ab5A37f26;
+    address constant public COORDINATOR_NEW = 0x9dA6Ff36Fc054b7FD2F72935DD3A9cFbFc00B8B6;
+    address constant public ASSESSOR_NEW  = 0xCC2cA000DB7Df0499667ca4048987727151b0b1f;
+    address constant public RESERVE_NEW = 0xd9Cec614db2b5A7490dF2462A4621D96bCD4bfE2;
     address constant public SENIOR_TRANCHE_NEW = 0xfc9E18e714c21539456d5f77F7F635781Cf56Af0;
     address constant public POOL_ADMIN = 0x20ca8D29F1ad57e85A73c2aA99dFF46241C94A1A;
     address constant public CLERK = 0x04140410249C4e9bB85f948135671Af30D941034;
 
     // TODO: check these global maker addresses
-    address constant public SPOTTER = address(0);
-    address constant public VAT = address(0);
-    address constant public JUG = address(0);
-    address constant public LIQ = address(0);
-    address constant public END = address(0);
+    address constant public SPOTTER = 0x65C79fcB50Ca1594B025960e539eD7A9a6D434A3;
+    address constant public VAT = 0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B;
+    address constant public JUG = 0x19c0976f590D67707E62397C87829d896Dc0f1F1;
+    address constant public LIQ = 0x88f88Bb9E66241B73B84f3A6E197FbBa487b1E30;
+    address constant public END = 0xBB856d1742fD182a90239D7AE85706C2FE4e5922;
 
     // TODO: set these pool specific maker addresses
-    address constant public URN = address(0);
-    address constant public RWA_GEM = address(0);
-    address constant public MAKER_MGR = address(0);
+    address constant public URN = 0xc40907545C57dB30F01a1c2acB242C7c7ACB2B90;
+    address constant public RWA_GEM = 0x6DB236515E90fC831D146f5829407746EDdc5296;
+    address constant public MAKER_MGR = 0x5b702e1fEF3F556cbe219eE697D7f170A236cc66;
 
     // TODO: set these
     address constant public POOL_ADMIN1 = 0xd60f7CFC1E051d77031aC21D9DB2F66fE54AE312;
@@ -152,7 +152,7 @@ contract TinlakeSpell is Addresses {
         DependLike(ASSESSOR_NEW).depend("juniorTranche", JUNIOR_TRANCHE);
         DependLike(ASSESSOR_NEW).depend("seniorTranche", SENIOR_TRANCHE_NEW);
         DependLike(ASSESSOR_NEW).depend("reserve", RESERVE_NEW);
-        DependLike(ASSESSOR_NEW).depend("clerk", CLERK); 
+        DependLike(ASSESSOR_NEW).depend("lending", CLERK); 
 
         // migrate permissions
         AuthLike(ASSESSOR_NEW).rely(COORDINATOR_NEW); 
