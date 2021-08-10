@@ -99,7 +99,7 @@ contract TinlakeSpell is Addresses {
     uint constant public MAT_BUFFER = 0.01 * 10**27;
 
     // TODO set these
-    string constant public SLUG = "";
+    string constant public SLUG = "fortunafi-1";
     string constant public IPFS_HASH = "";
 
     // permissions to be set
@@ -141,7 +141,7 @@ contract TinlakeSpell is Addresses {
         // for mkr integration: set minSeniorRatio in Assessor to 0      
         FileLike(ASSESSOR_NEW).file("minSeniorRatio", ASSESSOR_MIN_SENIOR_RATIO);
 
-        updateRegistry();
+        // updateRegistry();
     }
 
     function migrateAssessor() internal {
@@ -179,7 +179,6 @@ contract TinlakeSpell is Addresses {
         MigrationLike(RESERVE_NEW).migrate(RESERVE);
 
         // migrate dependencies 
-        DependLike(RESERVE_NEW).depend("assessor", ASSESSOR_NEW);
         DependLike(RESERVE_NEW).depend("currency", TINLAKE_CURRENCY);
         DependLike(RESERVE_NEW).depend("shelf", SHELF);
         DependLike(RESERVE_NEW).depend("lending", CLERK);
@@ -207,7 +206,7 @@ contract TinlakeSpell is Addresses {
         require((tranche.totalSupply() == 0 && tranche.totalRedeem() == 0), "tranche-has-orders");
 
         DependLike(SENIOR_TRANCHE_NEW).depend("reserve", RESERVE_NEW);
-        DependLike(SENIOR_TRANCHE_NEW).depend("epochTicker", COORDINATOR_NEW);
+        DependLike(SENIOR_TRANCHE_NEW).depend("coordinator", COORDINATOR_NEW);
         DependLike(SENIOR_OPERATOR).depend("tranche", SENIOR_TRANCHE_NEW);
 
         AuthLike(SENIOR_TOKEN).deny(SENIOR_TRANCHE);
@@ -281,6 +280,7 @@ contract TinlakeSpell is Addresses {
         poolAdmin.relyAdmin(POOL_ADMIN3);
         poolAdmin.relyAdmin(POOL_ADMIN4);
         poolAdmin.relyAdmin(POOL_ADMIN5);
+        poolAdmin.relyAdmin(POOL_ADMIN6);
         poolAdmin.relyAdmin(AO_POOL_ADMIN);
     }
 

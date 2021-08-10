@@ -35,6 +35,7 @@ interface INav {
 
 interface ITranche {
     function epochTicker() external returns(address);
+    function coordinator() external returns(address);
     function reserve() external returns(address);
 }
 

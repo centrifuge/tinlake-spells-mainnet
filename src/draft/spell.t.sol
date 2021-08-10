@@ -17,6 +17,8 @@ contract SpellTest is BaseSpellTest {
 
     function setUp() public virtual {
         initSpell();
+
+        poolReserveDAI = t_currency.balanceOf(spell.RESERVE());
     }
 
     function testCast() public {
@@ -48,7 +50,7 @@ contract SpellTest is BaseSpellTest {
 
     function assertMigrationTranche() public {
         assertEq(t_seniorTranche.reserve(), spell.RESERVE_NEW());
-        assertEq(t_seniorTranche.epochTicker(),spell.COORDINATOR_NEW());
+        assertEq(t_seniorTranche.coordinator(),spell.COORDINATOR_NEW());
         assertEq(t_seniorOperator.tranche(), spell.SENIOR_TRANCHE_NEW());
         assertHasPermissions(spell.SENIOR_TOKEN(), spell.SENIOR_TRANCHE_NEW());
         assertHasNoPermissions(spell.SENIOR_TOKEN(), spell.SENIOR_TRANCHE());
@@ -83,7 +85,6 @@ contract SpellTest is BaseSpellTest {
     function assertMigrationReserve() public {
         IReserve reserveOld =IReserve(spell.RESERVE());
          // check dependencies 
-        assertEq(t_reserve.assessor(), spell.ASSESSOR_NEW());
         assertEq(t_reserve.currency(), spell.TINLAKE_CURRENCY());
         assertEq(t_reserve.shelf(), spell.SHELF());
         assertEq(t_reserve.lending(), spell.CLERK());
@@ -208,7 +209,6 @@ contract SpellTest is BaseSpellTest {
         assertHasPermissions(spell.CLERK(), spell.POOL_ADMIN());
         assertHasPermissions(spell.SENIOR_MEMBERLIST(), spell.POOL_ADMIN());
         assertHasPermissions(spell.JUNIOR_MEMBERLIST(), spell.POOL_ADMIN());
-        // todo add admin checks once we have addresses
 
         assertHasPermissions(spell.POOL_ADMIN(), spell.GOVERNANCE());
         assertEq(t_poolAdmin.admins(spell.POOL_ADMIN1()), 1);
