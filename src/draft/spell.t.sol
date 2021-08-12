@@ -24,6 +24,7 @@ contract SpellTest is BaseSpellTest {
     function testCast() public {
         // give spell permissions on root contract
         AuthLike(spell.ROOT_CONTRACT()).rely(address(spell));
+        AuthLike(spell.POOL_REGISTRY()).rely(address(spell));
 
         spell.cast();
         
@@ -33,6 +34,7 @@ contract SpellTest is BaseSpellTest {
         assertMigrationTranche();
         assertIntegrationAdapter();
         assertPoolAdminSet();
+        assertRegistryUpdated();
     }
 
     function testFailCastNoPermissions() public {
@@ -218,6 +220,11 @@ contract SpellTest is BaseSpellTest {
         assertEq(t_poolAdmin.admins(spell.POOL_ADMIN5()), 1);
         assertEq(t_poolAdmin.admins(spell.POOL_ADMIN6()), 1);
         assertEq(t_poolAdmin.admins(spell.AO_POOL_ADMIN()), 1);
+    }
+
+    function assertRegistryUpdated() public {
+        (,,string memory data) = PoolRegistryLike(spell.POOL_REGISTRY()).find(spell.ROOT_CONTRACT());
+        assertEq(data, spell.IPFS_HASH());
     }
 
     function assertHasPermissions(address con, address ward) public {

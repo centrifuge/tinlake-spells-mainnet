@@ -170,11 +170,13 @@ contract BaseSpellTest is DSTest {
         // cheat: give testContract permissions on root contract by overriding storage 
         // storage slot for permissions => keccak256(key, mapslot) (mapslot = 0)
         t_hevm.store(spell.ROOT_CONTRACT(), keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
+        t_hevm.store(spell.POOL_REGISTRY(), keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
     }
 
     function castSpell() public {
         // give spell permissions on root contract
         AuthLike(spell.ROOT_CONTRACT()).rely(address(spell));
+        AuthLike(spell.POOL_REGISTRY()).rely(address(spell));
         spell.cast();
     }
 

@@ -66,6 +66,7 @@ contract TinlakeSpell is Addresses {
     address constant public GOVERNANCE = 0xf3BceA7494D8f3ac21585CA4b0E52aa175c24C25;
     address constant public POOL_REGISTRY = 0xddf1C516Cf87126c6c610B52FD8d609E67Fb6033;
 
+    // TODO: set these new swapped addresses
     address constant public COORDINATOR_NEW = 0x9dA6Ff36Fc054b7FD2F72935DD3A9cFbFc00B8B6;
     address constant public ASSESSOR_NEW  = 0xCC2cA000DB7Df0499667ca4048987727151b0b1f;
     address constant public RESERVE_NEW = 0xd9Cec614db2b5A7490dF2462A4621D96bCD4bfE2;
@@ -100,7 +101,7 @@ contract TinlakeSpell is Addresses {
 
     // TODO set these
     string constant public SLUG = "fortunafi-1";
-    string constant public IPFS_HASH = "";
+    string constant public IPFS_HASH = "QmcMhaxveNCHP8TyG7hxnUzDBMxQxXVFqtwaRRfFx4qCjj";
 
     // permissions to be set
     function cast() public {
@@ -141,7 +142,7 @@ contract TinlakeSpell is Addresses {
         // for mkr integration: set minSeniorRatio in Assessor to 0      
         FileLike(ASSESSOR_NEW).file("minSeniorRatio", ASSESSOR_MIN_SENIOR_RATIO);
 
-        // updateRegistry();
+        updateRegistry();
     }
 
     function migrateAssessor() internal {
@@ -256,7 +257,7 @@ contract TinlakeSpell is Addresses {
         MgrLike(MAKER_MGR).lock(1 ether);
     }
 
-    function setupPoolAdmin() public {
+    function setupPoolAdmin() internal {
         PoolAdminLike poolAdmin = PoolAdminLike(POOL_ADMIN);
 
         // setup dependencies 
