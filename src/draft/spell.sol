@@ -67,13 +67,13 @@ contract TinlakeSpell is Addresses {
     address constant public POOL_REGISTRY = 0xddf1C516Cf87126c6c610B52FD8d609E67Fb6033;
 
     // TODO: set these new swapped addresses
-    address constant public COORDINATOR_NEW = 0x585c080f36042bA2CD4C310660386cA3d95FdfAD;
-    address constant public ASSESSOR_NEW  = 0x989e5F083cF5B2065C60032d7Bafd176237f8E09;
-    address constant public RESERVE_NEW = 0xFAec38fFEe969cf18e88097EC62E30b70494e234;
-    address constant public SENIOR_TRANCHE_NEW = 0x675f5A545Fd57eC8Fe0916Fb61a2D9F19e2Da926;
-    address constant public JUNIOR_TRANCHE_NEW = 0xC90fE5884C1c2f2913fFee5440ce4dd34f4B279D;
-    address constant public POOL_ADMIN = 0x7A5f9AE1d4c81B5ea0Ab318ae24055898Bfb0abC;
-    address constant public CLERK = 0x43b3f07667906026336C92bFade718a3430A845d;
+    address constant public COORDINATOR_NEW = 0x37f3D10Bd18124a16f4DcCA02D41F910E3Aa746A;
+    address constant public ASSESSOR_NEW  = 0xf2ED14102ee9D86606Ec24E48e89060ADB6DeFdb;
+    address constant public RESERVE_NEW = 0x86284A692430c25EfF37007c5707a530A6d63A41;
+    address constant public SENIOR_TRANCHE_NEW = 0x7E410F288583BfEe30a306F38e451a93Caaa5C47;
+    address constant public JUNIOR_TRANCHE_NEW = 0x7fe1dBcBEA4e6D3846f5caB67cfC9fce39BF4d71;
+    address constant public POOL_ADMIN = 0xad88b6F193bF31Be0a44A2914809BC517b03D22e;
+    address constant public CLERK = 0xcC2B64dC91245110B513f0ad1393a9720F66B996;
 
     // TODO: check these global maker addresses
     address constant public SPOTTER = 0x65C79fcB50Ca1594B025960e539eD7A9a6D434A3;
@@ -83,9 +83,9 @@ contract TinlakeSpell is Addresses {
     address constant public END = 0xBB856d1742fD182a90239D7AE85706C2FE4e5922;
 
     // TODO: set these pool specific maker addresses
-    address constant public URN = 0x7bF825718e7C388c3be16CFe9982539A7455540F;
-    address constant public RWA_GEM = 0x07F0A80aD7AeB7BfB7f139EA71B3C8f7E17156B9;
-    address constant public MAKER_MGR = 0x2A9798c6F165B6D60Cfb923Fe5BFD6f338695D9B;
+    address constant public URN = 0xeF1699548717aa4Cf47aD738316280b56814C821;
+    address constant public RWA_GEM = 0x873F2101047A62F84456E3B2B13df2287925D3F9;
+    address constant public MAKER_MGR = 0xe1ed3F588A98bF8a3744f4BF74Fd8540e81AdE3f;
 
     // TODO: set these
     address constant public POOL_ADMIN1 = 0xd60f7CFC1E051d77031aC21D9DB2F66fE54AE312;
@@ -94,15 +94,15 @@ contract TinlakeSpell is Addresses {
     address constant public POOL_ADMIN4 = 0xa7Aa917b502d86CD5A23FFbD9Ee32E013015e069;
     address constant public POOL_ADMIN5 = 0x9eDec77dd2651Ce062ab17e941347018AD4eAEA9;
     address constant public POOL_ADMIN6 = 0xEf270f8877Aa1875fc13e78dcA31f3235210368f;
-    address constant public AO_POOL_ADMIN = 0x8CE8fC2e297F1688385Fc115A3cB104393FE3659;
+    address constant public AO_POOL_ADMIN = 0x384bE790Ac9526D1103EfC520d733AD64618D90d;
 
     // TODO: check these
     uint constant public ASSESSOR_MIN_SENIOR_RATIO = 0;
     uint constant public MAT_BUFFER = 0.01 * 10**27;
 
     // TODO set these
-    string constant public SLUG = "consolfreight-4";
-    string constant public IPFS_HASH = "Qme29E923WNGrscuLdhPVZGSR5YkdoKaSWhUDogdsjW5ky";
+    string constant public SLUG = "harbor-trade-2";
+    string constant public IPFS_HASH = "QmeZxngmMcMoHDTXY9ovrweykuW9ACK2VqGapyPxPdVRGf";
 
     // permissions to be set
     function cast() public {

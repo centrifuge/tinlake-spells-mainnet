@@ -175,7 +175,6 @@ contract TinlakeSpell {
     }
 
     function migrateTranches() internal {
-
         // senior
         TrancheLike seniorTranche = TrancheLike(SENIOR_TRANCHE_NEW);
         require((seniorTranche.totalSupply() == 0 && seniorTranche.totalRedeem() == 0), "senior-tranche-has-orders");
