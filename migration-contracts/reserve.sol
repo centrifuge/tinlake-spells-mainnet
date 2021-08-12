@@ -10,7 +10,7 @@ contract MigratedReserve is Reserve {
     bool public done;
     address public migratedFrom;
 
-    constructor(address currency) Reserve(currency) public {}
+    constructor(address currency) Reserve(currency) {}
 
     function migrate(address clone_) public auth {
         require(!done, "migration already finished");

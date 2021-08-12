@@ -18,6 +18,14 @@ interface IAssessor {
     function seniorBalance_() external view returns(uint);
     function calcSeniorTokenPrice(uint NAV, uint reserve_) external view returns(uint);
     function calcJuniorTokenPrice(uint NAV, uint reserve_) external view returns(uint);
+    function lending() external returns(address);
+    function seniorTranche() external returns(address);
+    function juniorTranche() external returns(address);
+    function seniorInterestRate() external view returns(uint);
+    function lastUpdateSeniorInterest() external view returns(uint);
+    function minSeniorRatio() external view returns(uint);
+    function maxSeniorRatio() external view returns(uint);
+    function maxReserve() external view returns(uint);
 }
 
 interface INav {
@@ -27,6 +35,8 @@ interface INav {
 
 interface ITranche {
     function epochTicker() external returns(address);
+    function coordinator() external returns(address);
+    function reserve() external returns(address);
 }
 
 interface ICoordinator  {
@@ -59,6 +69,63 @@ interface ICoordinator  {
     function poolClosing() external returns(bool);
 }
 
+interface IReserve {
+    function assessor() external returns(address);
+    function currency() external returns(address);
+    function shelf() external returns(address);
+    function pot() external returns(address);
+    function lending() external returns(address);
+    function currencyAvailable() external returns(uint);
+    function balance_() external returns(uint);
+}
+
+
+interface IOperator {
+    function tranche() external returns(address);
+}
+
+interface IPoolAdminLike {
+    function admins(address) external returns(uint);
+    function assessor() external returns(address);
+    function lending() external returns(address);
+    function juniorMemberlist() external returns(address);
+    function seniorMemberlist() external returns(address);
+}
+
+interface IClerk {
+    function assessor() external returns(address);
+    function mgr() external returns(address);
+    function coordinator() external returns(address);
+    function reserve() external returns(address); 
+    function tranche() external returns(address);
+    function collateral() external returns(address);
+    function spotter() external returns(address);
+    function vat() external returns(address);
+    function jug() external returns(address);
+    function matBuffer() external returns(uint);
+}
+
+interface IShelf {
+    function distributor() external returns(address);
+    function lender() external returns(address);
+}
+
+interface ICollector {
+    function distributor() external returns(address);
+}
+
+interface IRestrictedToken {
+    function hasMember(address member) external returns(bool);
+}
+
+interface IMgr {
+    function owner() external returns(address);
+    function pool() external returns(address);
+    function tranche() external returns(address);
+    function urn() external returns(address);
+    function liq() external returns(address);
+}
+
 interface IHevm {
     function warp(uint256) external;
     function store(address, bytes32, bytes32) external;
@@ -74,26 +141,44 @@ contract BaseSpellTest is DSTest {
     ITranche t_juniorTranche;
     SpellERC20Like t_currency;
     IAssessor t_assessor;
+    IReserve t_reserve;
+    IClerk t_clerk;
+    IMgr t_mgr;
+    IOperator t_seniorOperator;
+    IOperator t_juniorOperator;
+    IShelf t_shelf;
+    IRestrictedToken t_seniorToken;
+    IPoolAdminLike t_poolAdmin;
 
     function initSpell() public {
         spell = new TinlakeSpell();
 
-        t_hevm = IHevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+        t_hevm = IHevm(HEVM_ADDRESS);
 
         t_coordinator = ICoordinator(spell.COORDINATOR_NEW());
-        t_seniorTranche = ITranche(spell.SENIOR_TRANCHE());
-        t_juniorTranche = ITranche(spell.JUNIOR_TRANCHE());
+        t_seniorTranche = ITranche(spell.SENIOR_TRANCHE_NEW());
+        t_juniorTranche = ITranche(spell.JUNIOR_TRANCHE_NEW());
         t_currency = SpellERC20Like(spell.TINLAKE_CURRENCY());
-        t_assessor = IAssessor(spell.ASSESSOR());
+        t_assessor = IAssessor(spell.ASSESSOR_NEW());
+        t_reserve = IReserve(spell.RESERVE_NEW());
+        t_clerk = IClerk(spell.CLERK());
+        t_mgr = IMgr(spell.MAKER_MGR());
+        t_seniorOperator = IOperator(spell.SENIOR_OPERATOR());
+        t_juniorOperator = IOperator(spell.JUNIOR_OPERATOR());
+        t_shelf = IShelf(spell.SHELF());
+        t_seniorToken = IRestrictedToken(spell.SENIOR_TOKEN());
+        t_poolAdmin = IPoolAdminLike(spell.POOL_ADMIN());
 
         // cheat: give testContract permissions on root contract by overriding storage 
         // storage slot for permissions => keccak256(key, mapslot) (mapslot = 0)
         t_hevm.store(spell.ROOT_CONTRACT(), keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
+        t_hevm.store(spell.POOL_REGISTRY(), keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
     }
 
     function castSpell() public {
         // give spell permissions on root contract
         AuthLike(spell.ROOT_CONTRACT()).rely(address(spell));
+        AuthLike(spell.POOL_REGISTRY()).rely(address(spell));
         spell.cast();
     }
 

@@ -35,6 +35,12 @@ contract SpellRPCTest is TinlakeRPCTests, BaseSpellTest {
 
         // rpc tests should use the new addresses from the spell
         COORDINATOR = spell.COORDINATOR_NEW();
+        RESERVE = spell.RESERVE_NEW();
+        ASSESSOR = spell.ASSESSOR_NEW();
+        SENIOR_TRANCHE = spell.SENIOR_TRANCHE_NEW();
+        JUNIOR_TRANCHE = spell.JUNIOR_TRANCHE_NEW();
+        POOL_ADMIN = spell.POOL_ADMIN();
+        CLERK = spell.CLERK();
     
         initRPC();
     }
