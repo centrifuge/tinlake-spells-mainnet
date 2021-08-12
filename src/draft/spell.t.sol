@@ -31,7 +31,8 @@ contract SpellTest is BaseSpellTest {
         assertMigrationAssessor();
         assertMigrationCoordinator();
         assertMigrationReserve();
-        assertMigrationTranche();
+        assertMigrationSeniorTranche();
+        assertMigrationJuniorTranche();
         assertIntegrationAdapter();
         assertPoolAdminSet();
         assertRegistryUpdated();
@@ -49,13 +50,20 @@ contract SpellTest is BaseSpellTest {
         spell.cast();
     }
 
-
-    function assertMigrationTranche() public {
+    function assertMigrationSeniorTranche() public {
         assertEq(t_seniorTranche.reserve(), spell.RESERVE_NEW());
         assertEq(t_seniorTranche.coordinator(),spell.COORDINATOR_NEW());
         assertEq(t_seniorOperator.tranche(), spell.SENIOR_TRANCHE_NEW());
         assertHasPermissions(spell.SENIOR_TOKEN(), spell.SENIOR_TRANCHE_NEW());
         assertHasNoPermissions(spell.SENIOR_TOKEN(), spell.SENIOR_TRANCHE());
+    }
+
+    function assertMigrationJuniorTranche() public {
+        assertEq(t_juniorTranche.reserve(), spell.RESERVE_NEW());
+        assertEq(t_juniorTranche.coordinator(),spell.COORDINATOR_NEW());
+        assertEq(t_juniorOperator.tranche(), spell.JUNIOR_TRANCHE_NEW());
+        assertHasPermissions(spell.JUNIOR_TOKEN(), spell.JUNIOR_TRANCHE_NEW());
+        assertHasNoPermissions(spell.JUNIOR_TOKEN(), spell.JUNIOR_TRANCHE());
     }
 
     function assertMigrationAssessor() public {  

@@ -145,6 +145,7 @@ contract BaseSpellTest is DSTest {
     IClerk t_clerk;
     IMgr t_mgr;
     IOperator t_seniorOperator;
+    IOperator t_juniorOperator;
     IShelf t_shelf;
     IRestrictedToken t_seniorToken;
     IPoolAdminLike t_poolAdmin;
@@ -156,13 +157,14 @@ contract BaseSpellTest is DSTest {
 
         t_coordinator = ICoordinator(spell.COORDINATOR_NEW());
         t_seniorTranche = ITranche(spell.SENIOR_TRANCHE_NEW());
-        t_juniorTranche = ITranche(spell.JUNIOR_TRANCHE());
+        t_juniorTranche = ITranche(spell.JUNIOR_TRANCHE_NEW());
         t_currency = SpellERC20Like(spell.TINLAKE_CURRENCY());
         t_assessor = IAssessor(spell.ASSESSOR_NEW());
         t_reserve = IReserve(spell.RESERVE_NEW());
         t_clerk = IClerk(spell.CLERK());
         t_mgr = IMgr(spell.MAKER_MGR());
         t_seniorOperator = IOperator(spell.SENIOR_OPERATOR());
+        t_juniorOperator = IOperator(spell.JUNIOR_OPERATOR());
         t_shelf = IShelf(spell.SHELF());
         t_seniorToken = IRestrictedToken(spell.SENIOR_TOKEN());
         t_poolAdmin = IPoolAdminLike(spell.POOL_ADMIN());

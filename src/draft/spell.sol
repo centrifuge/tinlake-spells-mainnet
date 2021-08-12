@@ -71,6 +71,7 @@ contract TinlakeSpell is Addresses {
     address constant public ASSESSOR_NEW  = 0xCC2cA000DB7Df0499667ca4048987727151b0b1f;
     address constant public RESERVE_NEW = 0xd9Cec614db2b5A7490dF2462A4621D96bCD4bfE2;
     address constant public SENIOR_TRANCHE_NEW = 0xfc9E18e714c21539456d5f77F7F635781Cf56Af0;
+    address constant public JUNIOR_TRANCHE_NEW = 0x7DA307394B052Af46Aba415289db24177B754C7e;
     address constant public POOL_ADMIN = 0x20ca8D29F1ad57e85A73c2aA99dFF46241C94A1A;
     address constant public CLERK = 0x04140410249C4e9bB85f948135671Af30D941034;
 
@@ -135,7 +136,8 @@ contract TinlakeSpell is Addresses {
         migrateAssessor();
         migrateCoordinator();
         migrateReserve();
-        migrateTranche();
+        migrateSeniorTranche();
+        migrateJuniorTranche();
         integrateAdapter();
         setupPoolAdmin();
 
@@ -202,7 +204,7 @@ contract TinlakeSpell is Addresses {
         currency.transferFrom(address(this), RESERVE_NEW, balanceReserve);
     }
 
-    function migrateTranche() internal {
+    function migrateSeniorTranche() internal {
         TrancheLike tranche = TrancheLike(SENIOR_TRANCHE_NEW);
         require((tranche.totalSupply() == 0 && tranche.totalRedeem() == 0), "tranche-has-orders");
 
@@ -214,7 +216,22 @@ contract TinlakeSpell is Addresses {
         AuthLike(SENIOR_TOKEN).rely(SENIOR_TRANCHE_NEW);
         AuthLike(SENIOR_TRANCHE_NEW).rely(SENIOR_OPERATOR);
 
-        // TODO: updateMember of new senior tranche for seinor token?
+        SpellMemberlistLike(SENIOR_MEMBERLIST).updateMember(SENIOR_TRANCHE, type(uint256).max);
+    }
+
+    function migrateJuniorTranche() internal {
+        TrancheLike tranche = TrancheLike(JUNIOR_TRANCHE_NEW);
+        require((tranche.totalSupply() == 0 && tranche.totalRedeem() == 0), "tranche-has-orders");
+
+        DependLike(JUNIOR_TRANCHE_NEW).depend("reserve", RESERVE_NEW);
+        DependLike(JUNIOR_TRANCHE_NEW).depend("coordinator", COORDINATOR_NEW);
+        DependLike(JUNIOR_OPERATOR).depend("tranche", JUNIOR_TRANCHE_NEW);
+
+        AuthLike(JUNIOR_TOKEN).deny(JUNIOR_TRANCHE);
+        AuthLike(JUNIOR_TOKEN).rely(JUNIOR_TRANCHE_NEW);
+        AuthLike(JUNIOR_TRANCHE_NEW).rely(JUNIOR_OPERATOR);
+
+        SpellMemberlistLike(JUNIOR_MEMBERLIST).updateMember(JUNIOR_TRANCHE, type(uint256).max);
     }
 
     function integrateAdapter() internal {
