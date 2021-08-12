@@ -72,7 +72,7 @@ contract SpellTest is BaseSpellTest {
         // check dependencies
         assertEq(t_assessor.lending(), spell.CLERK());
         assertEq(t_assessor.seniorTranche(), spell.SENIOR_TRANCHE_NEW());
-        assertEq(t_assessor.juniorTranche(), spell.JUNIOR_TRANCHE());
+        assertEq(t_assessor.juniorTranche(), spell.JUNIOR_TRANCHE_NEW());
         assertEq(t_assessor.reserve(), spell.RESERVE_NEW());
         assertEq(t_assessor.navFeed(), spell.FEED());
 
@@ -106,7 +106,7 @@ contract SpellTest is BaseSpellTest {
 
         // check permissions
         assertHasPermissions(spell.RESERVE_NEW(), spell.CLERK());
-        assertHasPermissions(spell.RESERVE_NEW(), spell.JUNIOR_TRANCHE());
+        assertHasPermissions(spell.RESERVE_NEW(), spell.JUNIOR_TRANCHE_NEW());
         assertHasPermissions(spell.RESERVE_NEW(), spell.SENIOR_TRANCHE_NEW());
 
         // check state
@@ -120,14 +120,14 @@ contract SpellTest is BaseSpellTest {
     
         // check dependencies
         assertEq(t_coordinator.assessor(), spell.ASSESSOR_NEW());
-        assertEq(t_coordinator.juniorTranche(), spell.JUNIOR_TRANCHE());
+        assertEq(t_coordinator.juniorTranche(), spell.JUNIOR_TRANCHE_NEW());
         assertEq(t_coordinator.seniorTranche(), spell.SENIOR_TRANCHE_NEW());
         assertEq(t_coordinator.reserve(), spell.RESERVE_NEW());
-        assertEq(t_juniorTranche.epochTicker(),spell.COORDINATOR_NEW());
+        assertEq(t_juniorTranche.coordinator(),spell.COORDINATOR_NEW());
         // check permissions
-        assertHasPermissions(spell.JUNIOR_TRANCHE(), spell.COORDINATOR_NEW());
+        assertHasPermissions(spell.JUNIOR_TRANCHE_NEW(), spell.COORDINATOR_NEW());
         assertHasPermissions(spell.SENIOR_TRANCHE_NEW(), spell.COORDINATOR_NEW());
-        assertHasNoPermissions(spell.JUNIOR_TRANCHE(), address(coordinatorOld));
+        assertHasNoPermissions(spell.JUNIOR_TRANCHE_NEW(), address(coordinatorOld));
         assertHasNoPermissions(spell.SENIOR_TRANCHE_NEW(), address(coordinatorOld));
 
         // check state

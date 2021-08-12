@@ -118,12 +118,15 @@ contract TinlakeSpell is Addresses {
         root.relyContract(SHELF, address(this));
         root.relyContract(COLLECTOR, address(this));
         root.relyContract(JUNIOR_TRANCHE, address(this));
-        root.relyContract(SENIOR_OPERATOR, address(this));
         root.relyContract(SENIOR_TRANCHE, address(this));
+        root.relyContract(JUNIOR_OPERATOR, address(this));
+        root.relyContract(SENIOR_OPERATOR, address(this));
+        root.relyContract(JUNIOR_TOKEN, address(this));
         root.relyContract(SENIOR_TOKEN, address(this));
+        root.relyContract(JUNIOR_TRANCHE_NEW, address(this));
         root.relyContract(SENIOR_TRANCHE_NEW, address(this));
-        root.relyContract(SENIOR_MEMBERLIST, address(this));
         root.relyContract(JUNIOR_MEMBERLIST, address(this));
+        root.relyContract(SENIOR_MEMBERLIST, address(this));
         root.relyContract(CLERK, address(this));
         root.relyContract(POOL_ADMIN, address(this));
         root.relyContract(ASSESSOR_NEW, address(this));
@@ -152,7 +155,7 @@ contract TinlakeSpell is Addresses {
 
         // migrate dependencies 
         DependLike(ASSESSOR_NEW).depend("navFeed", FEED);
-        DependLike(ASSESSOR_NEW).depend("juniorTranche", JUNIOR_TRANCHE);
+        DependLike(ASSESSOR_NEW).depend("juniorTranche", JUNIOR_TRANCHE_NEW);
         DependLike(ASSESSOR_NEW).depend("seniorTranche", SENIOR_TRANCHE_NEW);
         DependLike(ASSESSOR_NEW).depend("reserve", RESERVE_NEW);
         DependLike(ASSESSOR_NEW).depend("lending", CLERK); 
@@ -167,15 +170,15 @@ contract TinlakeSpell is Addresses {
 
          // migrate dependencies 
         DependLike(COORDINATOR_NEW).depend("assessor", ASSESSOR_NEW);
-        DependLike(COORDINATOR_NEW).depend("juniorTranche", JUNIOR_TRANCHE);
+        DependLike(COORDINATOR_NEW).depend("juniorTranche", JUNIOR_TRANCHE_NEW);
         DependLike(COORDINATOR_NEW).depend("seniorTranche", SENIOR_TRANCHE_NEW);
         DependLike(COORDINATOR_NEW).depend("reserve", RESERVE_NEW);
-        DependLike(JUNIOR_TRANCHE).depend("epochTicker", COORDINATOR_NEW);
 
         // migrate permissions
-        AuthLike(JUNIOR_TRANCHE).rely(COORDINATOR_NEW); 
+        AuthLike(JUNIOR_TRANCHE_NEW).rely(COORDINATOR_NEW); 
         AuthLike(JUNIOR_TRANCHE).deny(COORDINATOR); 
         AuthLike(SENIOR_TRANCHE_NEW).rely(COORDINATOR_NEW);
+        AuthLike(SENIOR_TRANCHE).deny(COORDINATOR); 
     }
 
     function migrateReserve() internal {
@@ -193,7 +196,7 @@ contract TinlakeSpell is Addresses {
         DependLike(JUNIOR_TRANCHE).depend("reserve", RESERVE_NEW);
 
         // migrate permissions
-        AuthLike(RESERVE_NEW).rely(JUNIOR_TRANCHE);
+        AuthLike(RESERVE_NEW).rely(JUNIOR_TRANCHE_NEW);
         AuthLike(RESERVE_NEW).rely(SENIOR_TRANCHE_NEW);
         AuthLike(RESERVE_NEW).rely(ASSESSOR_NEW);
         
@@ -216,7 +219,7 @@ contract TinlakeSpell is Addresses {
         AuthLike(SENIOR_TOKEN).rely(SENIOR_TRANCHE_NEW);
         AuthLike(SENIOR_TRANCHE_NEW).rely(SENIOR_OPERATOR);
 
-        SpellMemberlistLike(SENIOR_MEMBERLIST).updateMember(SENIOR_TRANCHE, type(uint256).max);
+        SpellMemberlistLike(SENIOR_MEMBERLIST).updateMember(SENIOR_TRANCHE_NEW, type(uint256).max);
     }
 
     function migrateJuniorTranche() internal {
@@ -231,7 +234,7 @@ contract TinlakeSpell is Addresses {
         AuthLike(JUNIOR_TOKEN).rely(JUNIOR_TRANCHE_NEW);
         AuthLike(JUNIOR_TRANCHE_NEW).rely(JUNIOR_OPERATOR);
 
-        SpellMemberlistLike(JUNIOR_MEMBERLIST).updateMember(JUNIOR_TRANCHE, type(uint256).max);
+        SpellMemberlistLike(JUNIOR_MEMBERLIST).updateMember(JUNIOR_TRANCHE_NEW, type(uint256).max);
     }
 
     function integrateAdapter() internal {
