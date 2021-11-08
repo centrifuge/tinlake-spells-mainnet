@@ -1,100 +1,133 @@
-// SPDX-License-Identifier: AGPL-3.0-only\
+// SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.7.0;
 pragma experimental ABIEncoderV2;
 
-import "ds-test/test.sol";
-import "./draft/spell.sol";
+import "./addresses.sol";
 
-interface IAuth {
-    function wards(address) external returns(uint);
+interface SpellTinlakeRootLike {
+    function relyContract(address, address) external;
 }
 
-interface IAssessor {
-    function navFeed() external returns(address);
-    function reserve() external returns(address); 
-    function seniorRatio() external view returns(uint);
-    function totalBalance() external view returns(uint);
-    function seniorDebt_() external view returns(uint);
-    function seniorBalance_() external view returns(uint);
-    function calcSeniorTokenPrice(uint NAV, uint reserve_) external view returns(uint);
-    function calcJuniorTokenPrice(uint NAV, uint reserve_) external view returns(uint);
+interface SpellMemberlistLike {
+    function updateMember(address, uint) external;
 }
 
-interface INav {
-    function currentNAV() external view returns(uint);
-    function approximatedNAV() external view returns(uint);
+interface SpellReserveLike {
+    function payout(uint currencyAmount) external;
 }
 
-interface ITranche {
-    function epochTicker() external returns(address);
+interface DependLike {
+    function depend(bytes32, address) external;
 }
 
-interface ICoordinator  {
-    function assessor() external returns(address);
-    function juniorTranche() external returns(address);
-    function seniorTranche() external returns(address);
-    function reserve() external returns(address);
-    function lastEpochClosed() external returns(uint);
-    function minimumEpochTime() external returns(uint);
-    function lastEpochExecuted() external returns(uint);
-    function currentEpoch() external returns(uint);
-    function bestSubmission() external returns(uint, uint, uint, uint);
-    function order() external returns(uint, uint, uint, uint);
-    function bestSubScore() external returns(uint);
-    function gotFullValidSolution() external returns(bool);
-    function epochSeniorTokenPrice() external returns(uint);
-    function epochJuniorTokenPrice() external returns(uint);
-    function epochNAV() external returns(uint);
-    function epochSeniorAsset() external returns(uint);
-    function epochReserve() external returns(uint);
-    function submissionPeriod() external returns(bool);
-    function weightSeniorRedeem() external returns(uint);
-    function weightJuniorRedeem() external returns(uint);
-    function weightJuniorSupply() external returns(uint);
-    function weightSeniorSupply() external returns(uint);
-    function minChallengePeriodEnd() external returns(uint);
-    function challengeTime() external returns(uint);
-    function bestRatioImprovement() external returns(uint);
-    function bestReserveImprovement() external returns(uint);
-    function poolClosing() external returns(bool);
+interface FileLike {
+    function file(bytes32, uint) external;
+    function file(bytes32, address) external;
 }
 
-interface IHevm {
-    function warp(uint256) external;
-    function store(address, bytes32, bytes32) external;
+interface AuthLike {
+    function rely(address) external;
+    function deny(address) external;
 }
 
-contract BaseSpellTest is DSTest {
+interface MigrationLike {
+    function migrate(address) external;
+}
 
-    IHevm public t_hevm;
-    TinlakeSpell spell;
+interface PoolAdminLike {
+    function relyAdmin(address) external;
+}
 
-    ICoordinator t_coordinator;
-    ITranche t_seniorTranche;
-    ITranche t_juniorTranche;
-    SpellERC20Like t_currency;
-    IAssessor t_assessor;
+interface MgrLike {
+    function lock(uint) external;
+}
 
-    function initSpell() public {
-        spell = new TinlakeSpell();
+interface SpellERC20Like {
+    function balanceOf(address) external view returns (uint256);
+    function transferFrom(address, address, uint) external returns (bool);
+    function approve(address, uint) external;
+}
 
-        t_hevm = IHevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+interface NAVFeedLike {
+    function file(bytes32, uint) external;
+    function discountRate() external view returns (uint256);
+}
 
-        t_coordinator = ICoordinator(spell.COORDINATOR_NEW());
-        t_seniorTranche = ITranche(spell.SENIOR_TRANCHE());
-        t_juniorTranche = ITranche(spell.JUNIOR_TRANCHE());
-        t_currency = SpellERC20Like(spell.TINLAKE_CURRENCY());
-        t_assessor = IAssessor(spell.ASSESSOR());
+contract TinlakeSpell is Addresses {
 
-        // cheat: give testContract permissions on root contract by overriding storage 
-        // storage slot for permissions => keccak256(key, mapslot) (mapslot = 0)
-        t_hevm.store(spell.ROOT_CONTRACT(), keccak256(abi.encode(address(this), uint(0))), bytes32(uint(1)));
+    bool public done;
+    string constant public description = "Tinlake coordinator migration mainnet spell";
+
+    // TODO: set new coordinator address here
+    address constant public COORDINATOR_NEW = address(0);
+    address constant public ASSESSOR_NEW  = address(0);
+
+    // permissions to be set
+    function cast() public {
+        require(!done, "spell-already-cast");
+        done = true;
+        execute();
     }
 
-    function castSpell() public {
-        // give spell permissions on root contract
-        AuthLike(spell.ROOT_CONTRACT()).rely(address(spell));
-        spell.cast();
+    function execute() internal {
+        SpellTinlakeRootLike root = SpellTinlakeRootLike(ROOT_CONTRACT);
+
+        // set spell as ward on the core contract to be able to wire the new contracts correctly
+        root.relyContract(JUNIOR_TRANCHE, address(this));
+        root.relyContract(SENIOR_TRANCHE, address(this));
+        root.relyContract(ASSESSOR, address(this));
+        root.relyContract(RESERVE, address(this));
+        root.relyContract(COORDINATOR_NEW, address(this));
+        root.relyContract(CLERK, address(this));
+        root.relyContract(ASSESSOR_NEW, address(this));
+    
+        // contract migration --> assumption: root contract is already ward on the new contracts
+        migrateCoordinator();
+        migratePoolAdmin();
+    }
+
+    function migrateCoordinator() internal {
+        // migrate dependencies
+        DependLike(COORDINATOR_NEW).depend("assessor", ASSESSOR);
+        DependLike(COORDINATOR_NEW).depend("juniorTranche", JUNIOR_TRANCHE);
+        DependLike(COORDINATOR_NEW).depend("seniorTranche", SENIOR_TRANCHE);
+        DependLike(COORDINATOR_NEW).depend("reserve", RESERVE);
+        
+        DependLike(JUNIOR_TRANCHE).depend("epochTicker", COORDINATOR_NEW);
+        DependLike(SENIOR_TRANCHE).depend("epochTicker", COORDINATOR_NEW);
+        DependLike(CLERK).depend("coordinator", COORDINATOR_NEW);
+
+        // migrate permissions
+        AuthLike(ASSESSOR).rely(COORDINATOR_NEW); 
+        AuthLike(ASSESSOR).deny(COORDINATOR);
+        AuthLike(JUNIOR_TRANCHE).rely(COORDINATOR_NEW); 
+        AuthLike(JUNIOR_TRANCHE).deny(COORDINATOR); 
+        AuthLike(SENIOR_TRANCHE).rely(COORDINATOR_NEW);
+        AuthLike(SENIOR_TRANCHE).deny(COORDINATOR);
+
+        // migrate state
+        MigrationLike(COORDINATOR_NEW).migrate(COORDINATOR);
+    }
+
+    function migratePoolAdmin() public {
+        PoolAdminLike poolAdmin = PoolAdminLike(POOL_ADMIN);
+        AuthLike(POOL_ADMIN).rely(ADMIN1);
+
+        // setup dependencies 
+        DependLike(POOL_ADMIN).depend("assessor", ASSESSOR_NEW);
+        DependLike(POOL_ADMIN).depend("lending", CLERK);
+        DependLike(POOL_ADMIN).depend("seniorMemberlist", SENIOR_MEMBERLIST);
+        DependLike(POOL_ADMIN).depend("juniorMemberlist", JUNIOR_MEMBERLIST);
+
+        // setup permissions
+        AuthLike(ASSESSOR_NEW).rely(POOL_ADMIN);
+        AuthLike(CLERK).rely(POOL_ADMIN);
+        AuthLike(JUNIOR_MEMBERLIST).rely(POOL_ADMIN);
+        AuthLike(SENIOR_MEMBERLIST).rely(POOL_ADMIN);
+
+        //setup admins
+        poolAdmin.relyAdmin(ADMIN1);
+        poolAdmin.relyAdmin(ADMIN2);
     }
 
 }
