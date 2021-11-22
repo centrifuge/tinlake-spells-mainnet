@@ -58,9 +58,9 @@ contract TinlakeSpell is Addresses {
     bool public done;
     string constant public description = "HTC discount rate change mainnet spell";
 
-    uint[4] discountRates = [1000000002853881278538812785, 1000000002576420598680872653, 1000000002298959918822932521];
-    uint[4] timestamps;
-    bool[4] rateAlreadySet = [false, false, false, false];
+    uint[3] discountRates = [1000000002853881278538812785, 1000000002576420598680872653, 1000000002298959918822932521];
+    uint[3] timestamps;
+    bool[3] rateAlreadySet = [false, false, false];
     
     // permissions to be set
     function cast() public {
