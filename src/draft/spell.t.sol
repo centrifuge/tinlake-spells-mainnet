@@ -24,18 +24,14 @@ contract SpellTest is BaseSpellTest {
     }
 
     function assertDiscountChange() public {
-        assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000003329528158295281582);
-
-        t_hevm.warp(block.timestamp + 4 days);
-        spell.setDiscount(1);
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002853881278538812785);
 
-        t_hevm.warp(block.timestamp + 4 days);
-        spell.setDiscount(2);
+        t_hevm.warp(block.timestamp + 7 days);
+        spell.setDiscount(1);
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002576420598680872653);
 
-        t_hevm.warp(block.timestamp + 4 days);
-        spell.setDiscount(3);
+        t_hevm.warp(block.timestamp + 21 days);
+        spell.setDiscount(2);
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000002298959918822932521);
     }
 

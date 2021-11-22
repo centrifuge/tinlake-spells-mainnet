@@ -58,7 +58,7 @@ contract TinlakeSpell is Addresses {
     bool public done;
     string constant public description = "HTC discount rate change mainnet spell";
 
-    uint[4] discountRates = [1000000003329528158295281582, 1000000002853881278538812785, 1000000002576420598680872653, 1000000002298959918822932521];
+    uint[4] discountRates = [1000000002853881278538812785, 1000000002576420598680872653, 1000000002298959918822932521];
     uint[4] timestamps;
     bool[4] rateAlreadySet = [false, false, false, false];
     
@@ -77,9 +77,8 @@ contract TinlakeSpell is Addresses {
         // TODO: replace these
         timestamps = [
             block.timestamp + 0 days,
-            block.timestamp + 4 days,
-            block.timestamp + 8 days,
-            block.timestamp + 12 days
+            block.timestamp + 7 days,
+            block.timestamp + 21 days
         ];
 
         setDiscount(0);
