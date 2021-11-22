@@ -80,7 +80,7 @@ contract BaseSpellTest is DSTest {
 
         t_hevm = IHevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
-        t_coordinator = ICoordinator(spell.COORDINATOR_NEW());
+        // t_coordinator = ICoordinator(spell.COORDINATOR_NEW());
         t_seniorTranche = ITranche(spell.SENIOR_TRANCHE());
         t_juniorTranche = ITranche(spell.JUNIOR_TRANCHE());
         t_currency = SpellERC20Like(spell.TINLAKE_CURRENCY());
