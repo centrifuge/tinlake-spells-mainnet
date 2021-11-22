@@ -56,7 +56,7 @@ interface NAVFeedLike {
 contract TinlakeSpell is Addresses {
 
     bool public done;
-    string constant public description = "Harbor Freight discount rate change mainnet spell";
+    string constant public description = "HTC discount rate change mainnet spell";
 
     uint[4] discountRates = [1000000003329528158295281582, 1000000002853881278538812785, 1000000002576420598680872653, 1000000002298959918822932521];
     uint[4] timestamps;

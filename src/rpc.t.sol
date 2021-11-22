@@ -14,6 +14,7 @@ contract SpellRPCTest is TinlakeRPCTests, BaseSpellTest {
 
         // override addresses
         ASSESSOR = spell.ASSESSOR();
+        CLERK = spell.CLERK();
         COLLECTOR = spell.COLLECTOR();
         COORDINATOR = spell.COORDINATOR();
         FEED = spell.FEED();
@@ -22,6 +23,7 @@ contract SpellRPCTest is TinlakeRPCTests, BaseSpellTest {
         JUNIOR_TOKEN = spell.JUNIOR_TOKEN();
         JUNIOR_TRANCHE = spell.JUNIOR_TRANCHE();
         PILE = spell.PILE();
+        POOL_ADMIN = spell.POOL_ADMIN();
         RESERVE = spell.RESERVE();
         ROOT_CONTRACT = spell.ROOT_CONTRACT();
         SENIOR_MEMBERLIST = spell.SENIOR_MEMBERLIST();
@@ -30,6 +32,9 @@ contract SpellRPCTest is TinlakeRPCTests, BaseSpellTest {
         SENIOR_TRANCHE = spell.SENIOR_TRANCHE();
         SHELF = spell.SHELF();
         TINLAKE_CURRENCY = spell.TINLAKE_CURRENCY();
+
+        // rpc tests should use the new addresses from the spell
+        COORDINATOR = spell.COORDINATOR_NEW();
     
         initRPC();
     }
