@@ -24,7 +24,6 @@ contract SpellTest is BaseSpellTest {
     }
 
     function assertDiscountChange() public {
-        // TODO: replace these
         assertEq(NAVFeedLike(spell.FEED()).discountRate(), 1000000003329528158295281582);
 
         t_hevm.warp(block.timestamp + 4 days);
