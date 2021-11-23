@@ -74,7 +74,6 @@ contract TinlakeSpell is Addresses {
 
         root.relyContract(FEED, address(this));
     
-        // TODO: replace these
         timestamps = [
             block.timestamp + 0 days,
             block.timestamp + 7 days,
