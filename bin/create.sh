@@ -14,12 +14,15 @@ fi
 POOL_ID=$1
 TEMPLATE=$2
 
-# TODO: this should be loaded from the repo
-IPFS_HASH="QmUvZkxKFDyMAR5LmJjZC2ydhisGjrpCD2UbnUdJL6uD5t"
+RELEASES=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/centrifuge/tinlake-pools-mainnet/releases)
+IPFS=$(echo $RELEASES | jq -r ".[0].body" | awk '/https/{print $0}')
 
-POOLS_FILE=$(curl -s https://cloudflare-ipfs.com/ipfs/$IPFS_HASH)
+POOLS_FILE=$(curl -s $IPFS)
 NAME=$(echo $POOLS_FILE | jq -r ".[\"$POOL_ID\"].metadata.shortName")
 ADDRESSES=$(echo $POOLS_FILE | jq -r ".[\"$POOL_ID\"].addresses" | jq -r 'keys[] as $k | "\taddress constant public \($k) = \(.[$k]);"')
+
+mkdir './src/draft'
+touch './src/draft/addresses.sol'
 
 echo """
 // SPDX-License-Identifier: AGPL-3.0-only
