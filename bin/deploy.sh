@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-export ETH_GAS=10000000
-export GASNOW_PRICE_ESTIMATE="rapid"
-export ETH_GAS_PRICE=$(curl -s "https://www.gasnow.org/api/v3/gas/price?utm_source=tinlake-deploy" | jq -r ".data.$GASNOW_PRICE_ESTIMATE")
-
 echo "ETH_RPC_URL = $ETH_RPC_URL"
 echo "ETH_FROM = $ETH_FROM"
 echo "ETH_GAS_PRICE = $(printf %.0f $(echo "$ETH_GAS_PRICE/10^9" | bc -l)) gwei"
