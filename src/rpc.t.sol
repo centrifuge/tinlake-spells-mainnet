@@ -36,7 +36,7 @@ contract SpellRPCTest is TinlakeRPCTests, BaseSpellTest {
         // rpc tests should use the new addresses from the spell
         COORDINATOR = spell.COORDINATOR_NEW();
     
-        initRPC();
+        // initRPC();
     }
 
     function testLoanCycleWithMaker() public {
