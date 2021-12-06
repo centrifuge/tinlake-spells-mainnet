@@ -65,6 +65,10 @@ contract TinlakeSpell is Addresses {
     address constant public ADMIN2 = address(0);
     address constant public CLERK_NEW = address(0);
     address constant public FEED_NEW = address(0);
+    address constant public MGR = address(0);
+    address constant public SPOTTER = address(0);
+    address constant public VAT = address(0);
+    address constant public JUG = address(0);
 
 
     // permissions to be set
@@ -141,28 +145,42 @@ contract TinlakeSpell is Addresses {
     }
 
     function migrateClerk() public {
-        DependLike(CLERK_NEW).depend("coordinator", COORDINATOR_NEW);
+
+        // migrate state
+        MigrationLike(CLERK_NEW).migrate(CLERK);
+
+        // dependencies
         DependLike(CLERK_NEW).depend("assessor", ASSESSOR);
-        DependLike(CLERK_NEW).depend("reserve", RESERVE);
-        DependLike(CLERK_NEW).depend("tranche", SENIOR_TRANCHE);
-
-
-        AuthLike(CLERK_NEW).rely(COORDINATOR_NEW);
-        AuthLike(CLERK_NEW).rely(RESERVE);
-        AuthLike(SENIOR_TRANCHE).rely(CLERK_NEW);
-        AuthLike(SENIOR_TRANCHE).deny(CLERK);
-        AuthLike(RESERVE).rely(CLERK_NEW);
-        AuthLike(RESERVE).deny(CLERK);
-        AuthLike(ASSESSOR).rely(CLERK_NEW);
-        AuthLike(ASSESSOR).deny(CLERK);
-
-        // Maker contracts
         DependLike(CLERK_NEW).depend("mgr", MGR);
-        DependLike(CLERK_NEW).depend("vat", VAT);
+        DependLike(CLERK_NEW).depend("coordinator", COORDINATOR);
+        DependLike(CLERK_NEW).depend("reserve", RESERVE); 
+        DependLike(CLERK_NEW).depend("tranche", SENIOR_TRANCHE);
+        DependLike(CLERK_NEW).depend("collateral", SENIOR_TOKEN);
         DependLike(CLERK_NEW).depend("spotter", SPOTTER);
+        DependLike(CLERK_NEW).depend("vat", VAT);
         DependLike(CLERK_NEW).depend("jug", JUG);
 
+        // permissions
+        AuthLike(CLERK_NEW).rely(RESERVE);
+        AuthLike(CLERK_NEW).rely(POOL_ADMIN_NEW);
+        AuthLike(SENIOR_TRANCHE).rely(CLERK_NEW);
+        AuthLike(RESERVE).rely(CLERK_NEW);
+        AuthLike(ASSESSOR).rely(CLERK_NEW);
         AuthLike(MGR).rely(CLERK_NEW);
+
+        FileLike(MGR).file("owner", CLERK_NEW);
+
+        DependLike(ASSESSOR).depend("clerk", CLERK_NEW); 
+        DependLike(RESERVE).depend("lending", CLERK_NEW);
+        DependLike(POOL_ADMIN_NEW).depend("lending", CLERK_NEW);
+
+        // restricted token setup
+        SpellMemberlistLike(SENIOR_MEMBERLIST).updateMember(CLERK_NEW, uint(-1));
+
+        // remove old clerk
+        AuthLike(SENIOR_TRANCHE).deny(CLERK);
+        AuthLike(RESERVE).deny(CLERK);
+        AuthLike(ASSESSOR).deny(CLERK);
         AuthLike(MGR).deny(CLERK);
     }
 
