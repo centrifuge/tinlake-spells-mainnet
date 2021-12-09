@@ -323,7 +323,6 @@ contract TinlakeSpellsTest is DSTest {
         assertEq(clerkNew.jug(), jug_);
 
         assertEq(reserve.lending(), clerkNew_);
-        assertEq(assessor.clerk(), clerkNew_);
         assertEq(poolAdmin.lending(), clerkNew_);
 
         // check permissions
