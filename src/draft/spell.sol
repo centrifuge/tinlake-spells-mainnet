@@ -87,6 +87,7 @@ contract TinlakeSpell is Addresses {
     function execute() internal {
         SpellTinlakeRootLike root = SpellTinlakeRootLike(ROOT_CONTRACT);
 
+        PoolAdminLike(POOL_ADMIN_NEW).setAdminLevel(ROOT_CONTRACT, 3);
         // set spell as ward on the core contract to be able to wire the new contracts correctly
         root.relyContract(JUNIOR_TRANCHE, address(this));
         root.relyContract(SENIOR_TRANCHE, address(this));
