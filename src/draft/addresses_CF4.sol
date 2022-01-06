@@ -16,20 +16,24 @@ contract Addresses {
 	address constant public SENIOR_TOKEN = 0x5b2F0521875B188C0afc925B1598e1FF246F9306;
 	address constant public JUNIOR_MEMBERLIST = 0x4CA09F24f3342327da42d2b6035af741fC1AeB4A;
 	address constant public SENIOR_MEMBERLIST = 0x26129802A858F3C28553f793E1008b8338e6aEd2;
-	address constant public COORDINATOR = 0x585c080f36042bA2CD4C310660386cA3d95FdfAD;
-	address constant public ASSESSOR  = 0x989e5F083cF5B2065C60032d7Bafd176237f8E09;
-	address constant public RESERVE = 0xFAec38fFEe969cf18e88097EC62E30b70494e234;
-	address constant public SENIOR_TRANCHE = 0x675f5A545Fd57eC8Fe0916Fb61a2D9F19e2Da926;
-	address constant public JUNIOR_TRANCHE = 0xC90fE5884C1c2f2913fFee5440ce4dd34f4B279D;
+	address constant public COORDINATOR = 0xFc224d40Eb9c40c85c71efa773Ce24f8C95aAbAb;
+	address constant public ASSESSOR  = 0x6aaf2EE5b2B62fb9E29E021a1bF3B381454d900a;
+	address constant public RESERVE = 0x0d601b451aFD502e473bA4CE6E3876D652BCbee7;
+	address constant public SENIOR_TRANCHE = 0xB101eD16AD86cb5cc92dAdc357aD994Ab6c663A5;
+	address constant public JUNIOR_TRANCHE = 0x145d6256e20CD115eDA44Eb9258A3BC13c2a86fc;
 	address constant public POOL_ADMIN = 0x7A5f9AE1d4c81B5ea0Ab318ae24055898Bfb0abC;
-
+    
 	address constant public CLERK = 0x43b3f07667906026336C92bFade718a3430A845d;
 	address constant public MGR = 0x2A9798c6F165B6D60Cfb923Fe5BFD6f338695D9B;
 
-	address constant public ADMIN1 = address(0x71d9f8CFdcCEF71B59DD81AB387e523E2834F2b8);
-    address constant public ADMIN2 = address(0x9eDec77dd2651Ce062ab17e941347018AD4eAEA9);
     address constant public SPOTTER = 0x65C79fcB50Ca1594B025960e539eD7A9a6D434A3;
     address constant public VAT = 0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B;
     address constant public JUG = 0x19c0976f590D67707E62397C87829d896Dc0f1F1;
+
+	address constant public ADMIN1 = address(0x71d9f8CFdcCEF71B59DD81AB387e523E2834F2b8);
+	address constant public ADMIN2 = address(0x46a71eEf8DbcFcbAC7A0e8D5d6B634A649e61fb8);
+    address constant public ADMIN3 = address(0x9eDec77dd2651Ce062ab17e941347018AD4eAEA9);
+	address constant public ADMIN4 = address(0xEf270f8877Aa1875fc13e78dcA31f3235210368f);
+	address constant public ADMIN5 = address(0xddEa1De10E93c15037E83b8Ab937A46cc76f7009);
 }
 
