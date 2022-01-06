@@ -114,8 +114,14 @@ contract TinlakeSpell is Addresses {
         
         DependLike(CLERK_NEW).depend("coordinator", COORDINATOR_NEW);
 
+        // UNCOMMENT FOR HTC2, FF1, AEA
+        // DependLike(SENIOR_TRANCHE).depend("coordinator", COORDINATOR_NEW);
+        // DependLike(JUNIOR_TRANCHE).depend("coordinator", COORDINATOR_NEW);
+
+        // UNCOMMENT FOR NS2, CF4
         DependLike(SENIOR_TRANCHE).depend("epochTicker", COORDINATOR_NEW);
         DependLike(JUNIOR_TRANCHE).depend("epochTicker", COORDINATOR_NEW);
+
         // migrate permissions
         AuthLike(ASSESSOR).rely(COORDINATOR_NEW); 
         AuthLike(ASSESSOR).deny(COORDINATOR);
@@ -179,8 +185,6 @@ contract TinlakeSpell is Addresses {
 
         FileLike(MGR).file("owner", CLERK_NEW);
 
-        // DependLike(ASSESSOR).depend("clerk", CLERK_NEW); 
-        // DependLike(RESERVE).depend("lending", CLERK_NEW);
         DependLike(POOL_ADMIN_NEW).depend("lending", CLERK_NEW);
 
         // restricted token setup
