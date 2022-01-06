@@ -2,9 +2,10 @@
 pragma solidity >=0.7.0;
 pragma experimental ABIEncoderV2;
 
-import "./addresses.sol";
+import "./addresses_CF4.sol";
 import "./coordinator.sol";
 import "./clerk.sol";
+import "./pool.sol";
 
 interface SpellTinlakeRootLike {
     function relyContract(address, address) external;
@@ -37,7 +38,7 @@ interface MigrationLike {
 }
 
 interface PoolAdminLike {
-    function relyAdmin(address) external;
+    function setAdminLevel(address usr, uint level) external;
 }
 
 interface MgrLike {
@@ -69,11 +70,11 @@ contract TinlakeSpell is Addresses {
     MigratedCoordinator coordinator_new = new MigratedCoordinator(1800);
     address public COORDINATOR_NEW = address(coordinator_new);
 
-    MigratedClerk clerk_new = new MigratedClerk(0x6B175474E89094C44Da98b954EedeAC495271d0F, 0x5b2F0521875B188C0afc925B1598e1FF246F9306);
+    MigratedClerk clerk_new = new MigratedClerk(TINLAKE_CURRENCY, SENIOR_TOKEN);
     address public CLERK_NEW = address(clerk_new);
 
-    address constant public POOL_ADMIN_NEW = POOL_ADMIN;
-    address constant public FEED_NEW = FEED;
+    MigratedPoolAdmin poolAdmin_new = new MigratedPoolAdmin();
+    address public POOL_ADMIN_NEW = address(poolAdmin_new);
 
 
     // permissions to be set
@@ -92,7 +93,7 @@ contract TinlakeSpell is Addresses {
         root.relyContract(ASSESSOR, address(this));
         root.relyContract(RESERVE, address(this));
         // root.relyContract(COORDINATOR_NEW, address(this));
-        root.relyContract(POOL_ADMIN_NEW, address(this));
+        // root.relyContract(POOL_ADMIN_NEW, address(this));
         // root.relyContract(CLERK_NEW, address(this));
         root.relyContract(JUNIOR_MEMBERLIST, address(this));
         root.relyContract(SENIOR_MEMBERLIST, address(this));
@@ -112,8 +113,8 @@ contract TinlakeSpell is Addresses {
         
         DependLike(CLERK_NEW).depend("coordinator", COORDINATOR_NEW);
 
-        DependLike(SENIOR_TRANCHE).depend("coordinator", COORDINATOR_NEW);
-        DependLike(JUNIOR_TRANCHE).depend("coordinator", COORDINATOR_NEW);
+        DependLike(SENIOR_TRANCHE).depend("epochTicker", COORDINATOR_NEW);
+        DependLike(JUNIOR_TRANCHE).depend("epochTicker", COORDINATOR_NEW);
         // migrate permissions
         AuthLike(ASSESSOR).rely(COORDINATOR_NEW); 
         AuthLike(ASSESSOR).deny(COORDINATOR);
@@ -134,6 +135,8 @@ contract TinlakeSpell is Addresses {
         DependLike(POOL_ADMIN_NEW).depend("lending", CLERK_NEW);
         DependLike(POOL_ADMIN_NEW).depend("seniorMemberlist", SENIOR_MEMBERLIST);
         DependLike(POOL_ADMIN_NEW).depend("juniorMemberlist", JUNIOR_MEMBERLIST);
+        DependLike(POOL_ADMIN_NEW).depend("navFeed", FEED);
+        DependLike(POOL_ADMIN_NEW).depend("coordinator", COORDINATOR_NEW);
 
         // setup permissions
         AuthLike(ASSESSOR).rely(POOL_ADMIN_NEW);
@@ -144,9 +147,9 @@ contract TinlakeSpell is Addresses {
         AuthLike(SENIOR_MEMBERLIST).rely(POOL_ADMIN_NEW);
         AuthLike(SENIOR_MEMBERLIST).deny(POOL_ADMIN);
 
-        //setup admins
-        PoolAdminLike(POOL_ADMIN_NEW).relyAdmin(ADMIN1);
-        PoolAdminLike(POOL_ADMIN_NEW).relyAdmin(ADMIN2);
+        // setup admins
+        PoolAdminLike(POOL_ADMIN_NEW).setAdminLevel(ADMIN1, 3);
+        PoolAdminLike(POOL_ADMIN_NEW).setAdminLevel(ADMIN2, 1);
     }
 
     function migrateClerk() public {
@@ -176,7 +179,7 @@ contract TinlakeSpell is Addresses {
         FileLike(MGR).file("owner", CLERK_NEW);
 
         // DependLike(ASSESSOR).depend("clerk", CLERK_NEW); 
-        DependLike(RESERVE).depend("lending", CLERK_NEW);
+        // DependLike(RESERVE).depend("lending", CLERK_NEW);
         DependLike(POOL_ADMIN_NEW).depend("lending", CLERK_NEW);
 
         // restricted token setup

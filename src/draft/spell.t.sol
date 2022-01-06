@@ -76,7 +76,7 @@ interface IRoot {
 }
 
 interface IPoolAdmin {
-    function admins(address) external returns(uint);
+    function admin_level(address) external returns(uint256);
     function assessor() external returns(address);
     function lending() external returns(address);
     function juniorMemberlist() external returns(address);
@@ -283,7 +283,7 @@ contract TinlakeSpellsTest is DSTest {
 
         // setup dependencies 
         assertEq(poolAdminNew.assessor(), assessor_);
-        assertEq(poolAdminNew.lending(), clerk_);
+        assertEq(poolAdminNew.lending(), clerkNew_);
         assertEq(poolAdminNew.seniorMemberlist(), seniorMemberList_);
         assertEq(poolAdminNew.juniorMemberlist(), juniorMemberList_);
 
@@ -293,15 +293,13 @@ contract TinlakeSpellsTest is DSTest {
         assertHasPermissions(juniorMemberList_, poolAdminNew_);
         // todo add admin checks once we have addresses
 
-        assertHasPermissions(poolAdminNew_, admin1);
-        assertEq(poolAdminNew.admins(admin1), 1);
-        assertEq(poolAdminNew.admins(admin2), 1);
+        assertEq(poolAdminNew.admin_level(admin1), 3);
+        assertEq(poolAdminNew.admin_level(admin2), 1);
 
         assertHasNoPermissions(assessor_, poolAdmin_);
         assertHasNoPermissions(clerk_, poolAdmin_);
         assertHasNoPermissions(seniorMemberList_, poolAdmin_);
         assertHasNoPermissions(juniorMemberList_, poolAdmin_);
-        assertHasNoPermissions(poolAdmin_, admin1);
     }
 
     function assertClerkMigrated() internal {
@@ -322,12 +320,12 @@ contract TinlakeSpellsTest is DSTest {
         assertEq(clerkNew.vat(), vat_);
         assertEq(clerkNew.jug(), jug_);
 
-        assertEq(reserve.lending(), clerkNew_);
-        assertEq(poolAdmin.lending(), clerkNew_);
+        // assertEq(reserve.lending(), clerkNew_);
+        assertEq(poolAdminNew.lending(), clerkNew_);
 
         // check permissions
         assertHasPermissions(clerkNew_, reserve_);
-        assertHasPermissions(clerkNew_, poolAdmin_);
+        assertHasPermissions(clerkNew_, poolAdminNew_);
         assertHasPermissions(reserve_, clerkNew_);
         assertHasPermissions(seniorTranche_, clerkNew_);
         assertHasPermissions(assessor_, clerkNew_);
